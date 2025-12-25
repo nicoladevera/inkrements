@@ -6,8 +6,6 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-lightgray?style=flat-square)
 ![React Native](https://img.shields.io/badge/React%20Native-Expo-blue?style=flat-square)
 
-> **📦 First time here?** See [PUSH_TO_GITHUB.md](PUSH_TO_GITHUB.md) for easy scripts to commit and push this project to GitHub.
-
 ## ✨ Features
 
 ### Habit Management
@@ -63,7 +61,7 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 1. **Clone the repository**
    ```bash
    git clone https://github.com/yourusername/inkrements.git
-   cd inkrements/Inkrements
+   cd inkrements
    ```
 
 2. **Install dependencies**
@@ -84,8 +82,13 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 ## 🏗️ Project Structure
 
 ```
-Inkrements/
-├── App.tsx                           # Main entry point with navigation
+inkrements/
+├── index.ts                          # Entry point (registers root component)
+├── App.tsx                           # Main app component with navigation
+├── app.json                          # Expo app configuration
+├── package.json                      # NPM dependencies and scripts
+├── tsconfig.json                     # TypeScript configuration
+├── assets/                           # Static assets (icons, splash images)
 ├── src/
 │   ├── components/                   # Reusable UI components
 │   │   ├── DateRangeSelector.tsx     # Date range dropdown (4-52 weeks)
@@ -114,8 +117,10 @@ Inkrements/
 │       ├── colorUtils.ts             # Color utility functions
 │       ├── dateUtils.ts              # Date manipulation (date-fns)
 │       └── statisticsUtils.ts        # Statistics calculations
-├── package.json
-└── tsconfig.json
+├── tasks/                            # Project planning documents
+│   ├── prd-inkrements-habit-tracker.md
+│   └── tasks-inkrements-habit-tracker.md
+└── rules/                            # AI prompt rules/templates
 ```
 
 ## 🛠️ Tech Stack
