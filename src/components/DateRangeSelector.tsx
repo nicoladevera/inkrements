@@ -14,6 +14,8 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { BorderRadius, Shadows, Spacing } from '../constants/spacing';
 
 export interface DateRangeOption {
   weeks: number;
@@ -39,15 +41,15 @@ export const DateRangeSelector: React.FC<DateRangeSelectorProps> = memo(({
   onSelect,
 }) => {
   const [modalVisible, setModalVisible] = useState(false);
-  
-  const selectedOption = DATE_RANGE_OPTIONS.find(opt => opt.weeks === selectedWeeks) 
+
+  const selectedOption = DATE_RANGE_OPTIONS.find(opt => opt.weeks === selectedWeeks)
     || DATE_RANGE_OPTIONS[2]; // Default to 12 weeks
-  
+
   const handleSelect = (weeks: number) => {
     onSelect(weeks);
     setModalVisible(false);
   };
-  
+
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -56,26 +58,26 @@ export const DateRangeSelector: React.FC<DateRangeSelectorProps> = memo(({
         activeOpacity={0.7}
       >
         <Text style={styles.selectorText}>{selectedOption.label}</Text>
-        <MaterialCommunityIcons 
-          name="chevron-down" 
-          size={20} 
-          color={Colors.textSecondary} 
+        <MaterialCommunityIcons
+          name="chevron-down"
+          size={20}
+          color={Colors.textSecondary}
         />
       </TouchableOpacity>
-      
+
       <Modal
         visible={modalVisible}
         transparent
         animationType="fade"
         onRequestClose={() => setModalVisible(false)}
       >
-        <Pressable 
+        <Pressable
           style={styles.modalOverlay}
           onPress={() => setModalVisible(false)}
         >
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Select Date Range</Text>
-            
+
             {DATE_RANGE_OPTIONS.map((option) => (
               <TouchableOpacity
                 key={option.weeks}
@@ -93,10 +95,10 @@ export const DateRangeSelector: React.FC<DateRangeSelectorProps> = memo(({
                   {option.label}
                 </Text>
                 {option.weeks === selectedWeeks && (
-                  <MaterialCommunityIcons 
-                    name="check" 
-                    size={20} 
-                    color={Colors.textPrimary} 
+                  <MaterialCommunityIcons
+                    name="check"
+                    size={20}
+                    color={Colors.accent}
                   />
                 )}
               </TouchableOpacity>
@@ -110,42 +112,42 @@ export const DateRangeSelector: React.FC<DateRangeSelectorProps> = memo(({
 
 const styles = StyleSheet.create({
   container: {
-    marginVertical: 8,
+    marginVertical: Spacing.sm,
   },
   selector: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.lg,
     backgroundColor: Colors.cardBackground,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderRadius: BorderRadius.button,
+    ...Shadows.card,
   },
   selectorText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textPrimary,
   },
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: Colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: Spacing.xxl,
   },
   modalContent: {
-    backgroundColor: Colors.background,
-    borderRadius: 12,
-    padding: 16,
+    backgroundColor: Colors.cardBackground,
+    borderRadius: BorderRadius.modal,
+    padding: Spacing.lg,
     width: '100%',
     maxWidth: 340,
+    ...Shadows.cardHover,
   },
   modalTitle: {
-    fontSize: 16,
-    fontWeight: '600',
+    fontFamily: Typography.fontFamily.serif,
+    fontSize: Typography.fontSize.title,
     color: Colors.textPrimary,
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
     textAlign: 'center',
   },
   option: {
@@ -153,20 +155,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     paddingVertical: 14,
-    paddingHorizontal: 12,
-    borderRadius: 8,
+    paddingHorizontal: Spacing.md,
+    borderRadius: BorderRadius.button,
   },
   optionSelected: {
-    backgroundColor: Colors.cardBackground,
+    backgroundColor: Colors.accentLight,
   },
   optionText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textPrimary,
   },
   optionTextSelected: {
-    fontWeight: '600',
+    fontWeight: Typography.fontWeight.semibold,
   },
 });
 
 DateRangeSelector.displayName = 'DateRangeSelector';
-

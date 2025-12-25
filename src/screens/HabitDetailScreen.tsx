@@ -16,6 +16,8 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { BorderRadius, Shadows, Spacing } from '../constants/spacing';
 import { Habit } from '../models/Habit';
 import { Progress } from '../models/Progress';
 import { ProgressGrid } from '../components/ProgressGrid';
@@ -35,19 +37,19 @@ export const HabitDetailScreen: React.FC = () => {
   const navigation = useNavigation<HabitDetailScreenNavigationProp>();
   const route = useRoute<HabitDetailScreenRouteProp>();
   const { habitId } = route.params;
-  
+
   const [habit, setHabit] = useState<Habit | null>(null);
   const [progressData, setProgressData] = useState<Progress[]>([]);
   const [selectedWeeks, setSelectedWeeks] = useState(12); // Default 12 weeks
   const [statistics, setStatistics] = useState<Stats | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  
+
   // Level selector modal state
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedDate, setSelectedDate] = useState<string>('');
   const [currentLevel, setCurrentLevel] = useState(0);
   const [isEditing, setIsEditing] = useState(false);
-  
+
   // Load habit and progress data
   const loadData = useCallback(async () => {
     try {
@@ -57,12 +59,12 @@ export const HabitDetailScreen: React.FC = () => {
         navigation.goBack();
         return;
       }
-      
+
       setHabit(habitData);
-      
+
       const progress = await getProgressForDateRange(habitId, selectedWeeks);
       setProgressData(progress);
-      
+
       // Calculate statistics
       const stats = calculateCompletionStats(progress, selectedWeeks);
       setStatistics(stats);
@@ -73,32 +75,32 @@ export const HabitDetailScreen: React.FC = () => {
       setIsLoading(false);
     }
   }, [habitId, selectedWeeks, navigation]);
-  
+
   // Load data on mount and focus
   useFocusEffect(
     useCallback(() => {
       loadData();
     }, [loadData])
   );
-  
+
   // Handle date range change
   const handleDateRangeChange = useCallback((weeks: number) => {
     setSelectedWeeks(weeks);
   }, []);
-  
+
   // Reload when weeks change
   useEffect(() => {
     if (!isLoading) {
       loadData();
     }
   }, [selectedWeeks]);
-  
+
   // Handle tile press
   const handleTilePress = useCallback(async (date: string) => {
     if (!habit) return;
-    
+
     const existingProgress = await getProgressForDate(habitId, date);
-    
+
     if (habit.trackingType === 'binary') {
       if (existingProgress && existingProgress.level > 0) {
         // Already logged, open edit modal
@@ -119,18 +121,18 @@ export const HabitDetailScreen: React.FC = () => {
       setModalVisible(true);
     }
   }, [habit, habitId, loadData]);
-  
+
   // Handle tile long press
   const handleTileLongPress = useCallback(async (date: string) => {
     const existingProgress = await getProgressForDate(habitId, date);
     if (!existingProgress || existingProgress.level === 0) return;
-    
+
     setSelectedDate(date);
     setCurrentLevel(existingProgress.level);
     setIsEditing(true);
     setModalVisible(true);
   }, [habitId]);
-  
+
   // Handle level selection
   const handleSelectLevel = useCallback(async (level: number) => {
     try {
@@ -142,7 +144,7 @@ export const HabitDetailScreen: React.FC = () => {
       Alert.alert('Error', 'Failed to log progress');
     }
   }, [habitId, selectedDate, loadData]);
-  
+
   // Handle delete progress
   const handleDeleteProgress = useCallback(async () => {
     try {
@@ -154,12 +156,12 @@ export const HabitDetailScreen: React.FC = () => {
       Alert.alert('Error', 'Failed to delete progress');
     }
   }, [habitId, selectedDate, loadData]);
-  
+
   // Handle edit habit
   const handleEditHabit = useCallback(() => {
     navigation.navigate('CreateHabit', { habitId });
   }, [navigation, habitId]);
-  
+
   // Handle delete habit
   const handleDeleteHabit = useCallback(() => {
     Alert.alert(
@@ -183,7 +185,7 @@ export const HabitDetailScreen: React.FC = () => {
       ]
     );
   }, [habit, habitId, navigation]);
-  
+
   // Set up header options
   useEffect(() => {
     navigation.setOptions({
@@ -205,7 +207,7 @@ export const HabitDetailScreen: React.FC = () => {
       ),
     });
   }, [navigation, handleEditHabit, handleDeleteHabit]);
-  
+
   if (isLoading || !habit) {
     return (
       <View style={styles.loadingContainer}>
@@ -213,7 +215,7 @@ export const HabitDetailScreen: React.FC = () => {
       </View>
     );
   }
-  
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Habit Header */}
@@ -227,25 +229,25 @@ export const HabitDetailScreen: React.FC = () => {
         </View>
         <Text style={styles.habitName}>{habit.name}</Text>
       </View>
-      
-      {/* Statistics */}
+
+      {/* Statistics Card */}
       {statistics && (
-        <View style={styles.statsContainer}>
+        <View style={styles.sectionCard}>
           <ProgressStatistics statistics={statistics} />
         </View>
       )}
-      
+
       {/* Level Legend */}
       <View style={styles.legendContainer}>
         <LevelLegend levels={habit.levels} trackingType={habit.trackingType} />
       </View>
-      
+
       {/* Date Range Selector */}
       <DateRangeSelector
         selectedWeeks={selectedWeeks}
         onSelect={handleDateRangeChange}
       />
-      
+
       {/* Progress Grid */}
       <View style={styles.gridContainer}>
         <ProgressGrid
@@ -284,7 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   content: {
-    padding: 16,
+    padding: Spacing.lg,
     paddingBottom: 40,
   },
   loadingContainer: {
@@ -294,47 +296,48 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.bodyLarge,
     color: Colors.textSecondary,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 16,
+    marginBottom: Spacing.lg,
   },
   iconContainer: {
     width: 56,
     height: 56,
-    borderRadius: 12,
-    backgroundColor: Colors.cardBackground,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderRadius: BorderRadius.icon,
+    backgroundColor: Colors.accentLight,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 16,
+    marginRight: Spacing.lg,
   },
   habitName: {
     flex: 1,
-    fontSize: 24,
-    fontWeight: '700',
+    fontFamily: Typography.fontFamily.serif,
+    fontSize: Typography.fontSize.headline,
     color: Colors.textPrimary,
   },
-  statsContainer: {
-    marginBottom: 16,
+  sectionCard: {
+    backgroundColor: Colors.cardBackground,
+    borderRadius: BorderRadius.card,
+    padding: Spacing.lg,
+    marginBottom: Spacing.md,
+    ...Shadows.card,
   },
   legendContainer: {
-    marginBottom: 16,
+    marginBottom: Spacing.md,
   },
   gridContainer: {
-    marginTop: 16,
+    marginTop: Spacing.lg,
     alignItems: 'center',
   },
   headerButtons: {
     flexDirection: 'row',
-    gap: 8,
+    gap: Spacing.sm,
   },
   headerButton: {
-    padding: 8,
+    padding: Spacing.sm,
   },
 });
-

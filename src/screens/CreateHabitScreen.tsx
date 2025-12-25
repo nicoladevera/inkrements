@@ -17,12 +17,15 @@ import {
 import { useNavigation, useRoute, RouteProp } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { BorderRadius, Spacing } from '../constants/spacing';
 import { HABIT_ICONS, DEFAULT_ICON } from '../constants/icons';
 import { TrackingType, HabitLevel, DEFAULT_LEVELS, BINARY_LEVEL } from '../models/Habit';
 import { createHabit, getHabitById, updateHabit } from '../services/habitService';
-import { getDefaultLevelColors, GRAYSCALE_OPTIONS } from '../utils/colorUtils';
+import { getDefaultLevelColors, WARM_COLOR_OPTIONS } from '../utils/colorUtils';
 import { RootStackParamList } from '../../App';
 
 type CreateHabitScreenRouteProp = RouteProp<RootStackParamList, 'CreateHabit'>;
@@ -33,7 +36,7 @@ export const CreateHabitScreen: React.FC = () => {
   const route = useRoute<CreateHabitScreenRouteProp>();
   const habitId = route.params?.habitId;
   const isEditing = !!habitId;
-  
+
   // Form state
   const [name, setName] = useState('');
   const [selectedIcon, setSelectedIcon] = useState(DEFAULT_ICON.name);
@@ -41,14 +44,14 @@ export const CreateHabitScreen: React.FC = () => {
   const [levels, setLevels] = useState<HabitLevel[]>([...DEFAULT_LEVELS]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  
+
   // Load existing habit data if editing
   useEffect(() => {
     if (isEditing && habitId) {
       loadHabit();
     }
   }, [habitId, isEditing]);
-  
+
   const loadHabit = async () => {
     setIsLoading(true);
     try {
@@ -68,49 +71,49 @@ export const CreateHabitScreen: React.FC = () => {
       setIsLoading(false);
     }
   };
-  
+
   // Set header title
   useEffect(() => {
     navigation.setOptions({
       title: isEditing ? 'Edit Habit' : 'Create Habit',
     });
   }, [navigation, isEditing]);
-  
+
   // Handle level name change
   const handleLevelNameChange = (index: number, newName: string) => {
     const newLevels = [...levels];
     newLevels[index] = { ...newLevels[index], name: newName };
     setLevels(newLevels);
   };
-  
+
   // Handle level color change
   const handleLevelColorChange = (index: number, color: string) => {
     const newLevels = [...levels];
     newLevels[index] = { ...newLevels[index], colorValue: color };
     setLevels(newLevels);
   };
-  
+
   // Add a new level
   const handleAddLevel = () => {
     if (levels.length >= 3) return;
     const defaultColors = getDefaultLevelColors(levels.length + 1);
     setLevels([...levels, { name: `Level ${levels.length + 1}`, colorValue: defaultColors[levels.length] }]);
   };
-  
+
   // Remove a level
   const handleRemoveLevel = (index: number) => {
     if (levels.length <= 2) return;
     const newLevels = levels.filter((_, i) => i !== index);
     setLevels(newLevels);
   };
-  
+
   // Validate form
   const validateForm = (): boolean => {
     if (!name.trim()) {
       Alert.alert('Validation Error', 'Please enter a habit name');
       return false;
     }
-    
+
     if (trackingType === 'level-based') {
       for (const level of levels) {
         if (!level.name.trim()) {
@@ -119,14 +122,14 @@ export const CreateHabitScreen: React.FC = () => {
         }
       }
     }
-    
+
     return true;
   };
-  
+
   // Handle save
   const handleSave = async () => {
     if (!validateForm()) return;
-    
+
     setIsSaving(true);
     try {
       if (isEditing && habitId) {
@@ -144,7 +147,7 @@ export const CreateHabitScreen: React.FC = () => {
           levels: trackingType === 'binary' ? undefined : levels,
         });
       }
-      
+
       navigation.goBack();
     } catch (error) {
       console.error('Error saving habit:', error);
@@ -153,7 +156,7 @@ export const CreateHabitScreen: React.FC = () => {
       setIsSaving(false);
     }
   };
-  
+
   if (isLoading) {
     return (
       <View style={styles.loadingContainer}>
@@ -161,7 +164,7 @@ export const CreateHabitScreen: React.FC = () => {
       </View>
     );
   }
-  
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -180,7 +183,7 @@ export const CreateHabitScreen: React.FC = () => {
             maxLength={50}
           />
         </View>
-        
+
         {/* Icon Selection */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Icon</Text>
@@ -204,7 +207,7 @@ export const CreateHabitScreen: React.FC = () => {
             ))}
           </View>
         </View>
-        
+
         {/* Tracking Type */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Tracking Type</Text>
@@ -230,7 +233,7 @@ export const CreateHabitScreen: React.FC = () => {
               </Text>
               <Text style={styles.typeDescription}>Done / Not done</Text>
             </TouchableOpacity>
-            
+
             <TouchableOpacity
               style={[
                 styles.typeButton,
@@ -254,12 +257,12 @@ export const CreateHabitScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         </View>
-        
+
         {/* Level Configuration (for level-based) */}
         {trackingType === 'level-based' && (
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Levels ({levels.length}/3)</Text>
-            
+
             {levels.map((level, index) => (
               <View key={index} style={styles.levelRow}>
                 <View
@@ -277,7 +280,7 @@ export const CreateHabitScreen: React.FC = () => {
                   showsHorizontalScrollIndicator={false}
                   style={styles.colorOptions}
                 >
-                  {GRAYSCALE_OPTIONS.map((option) => (
+                  {WARM_COLOR_OPTIONS.map((option) => (
                     <TouchableOpacity
                       key={option.value}
                       style={[
@@ -303,7 +306,7 @@ export const CreateHabitScreen: React.FC = () => {
                 )}
               </View>
             ))}
-            
+
             {levels.length < 3 && (
               <TouchableOpacity
                 style={styles.addLevelButton}
@@ -321,8 +324,8 @@ export const CreateHabitScreen: React.FC = () => {
           </View>
         )}
       </ScrollView>
-      
-      {/* Save Button */}
+
+      {/* Save Button with Gradient */}
       <View style={styles.footer}>
         <TouchableOpacity
           style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
@@ -330,6 +333,12 @@ export const CreateHabitScreen: React.FC = () => {
           disabled={isSaving}
           activeOpacity={0.8}
         >
+          <LinearGradient
+            colors={[Colors.gradientStart, Colors.gradientMid, Colors.gradientEnd]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={StyleSheet.absoluteFill}
+          />
           <Text style={styles.saveButtonText}>
             {isSaving ? 'Saving...' : (isEditing ? 'Save Changes' : 'Create Habit')}
           </Text>
@@ -348,7 +357,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
-    padding: 16,
+    padding: Spacing.lg,
     paddingBottom: 100,
   },
   loadingContainer: {
@@ -358,101 +367,101 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   loadingText: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.bodyLarge,
     color: Colors.textSecondary,
   },
   section: {
-    marginBottom: 24,
+    marginBottom: Spacing.xxl,
   },
   sectionTitle: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: Typography.fontSize.caption,
+    fontWeight: Typography.fontWeight.semibold,
     color: Colors.textSecondary,
-    marginBottom: 12,
+    marginBottom: Spacing.md,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: Typography.letterSpacing.wide,
   },
   textInput: {
-    backgroundColor: Colors.cardBackground,
+    backgroundColor: Colors.cardBackgroundAlt,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 16,
+    borderRadius: BorderRadius.button,
+    paddingHorizontal: Spacing.lg,
     paddingVertical: 14,
-    fontSize: 16,
+    fontSize: Typography.fontSize.bodyLarge,
     color: Colors.textPrimary,
   },
   iconGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
+    gap: Spacing.sm,
   },
   iconButton: {
     width: 48,
     height: 48,
-    borderRadius: 8,
-    backgroundColor: Colors.cardBackground,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderRadius: BorderRadius.icon,
+    backgroundColor: Colors.cardBackgroundAlt,
+    borderWidth: 2,
+    borderColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
   },
   iconButtonSelected: {
-    borderColor: Colors.textPrimary,
-    borderWidth: 2,
+    backgroundColor: Colors.accentLight,
+    borderColor: Colors.accent,
   },
   typeSelector: {
     flexDirection: 'row',
-    gap: 12,
+    gap: Spacing.md,
   },
   typeButton: {
     flex: 1,
-    padding: 16,
-    borderRadius: 8,
-    backgroundColor: Colors.cardBackground,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    padding: Spacing.lg,
+    borderRadius: BorderRadius.button,
+    backgroundColor: Colors.cardBackgroundAlt,
+    borderWidth: 2,
+    borderColor: 'transparent',
     alignItems: 'center',
     gap: 4,
   },
   typeButtonSelected: {
-    borderColor: Colors.textPrimary,
-    borderWidth: 2,
+    backgroundColor: Colors.accentLight,
+    borderColor: Colors.accent,
   },
   typeButtonText: {
-    fontSize: 14,
-    fontWeight: '600',
+    fontSize: Typography.fontSize.bodySmall,
+    fontWeight: Typography.fontWeight.semibold,
     color: Colors.textSecondary,
   },
   typeButtonTextSelected: {
     color: Colors.textPrimary,
   },
   typeDescription: {
-    fontSize: 12,
+    fontSize: Typography.fontSize.caption,
     color: Colors.textTertiary,
   },
   levelRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
-    gap: 8,
+    marginBottom: Spacing.md,
+    gap: Spacing.sm,
   },
   levelColorPreview: {
     width: 32,
     height: 32,
-    borderRadius: 6,
+    borderRadius: BorderRadius.tile,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   levelInput: {
     flex: 1,
-    backgroundColor: Colors.cardBackground,
+    backgroundColor: Colors.cardBackgroundAlt,
     borderWidth: 1,
     borderColor: Colors.border,
-    borderRadius: 8,
-    paddingHorizontal: 12,
+    borderRadius: BorderRadius.button,
+    paddingHorizontal: Spacing.md,
     paddingVertical: 10,
-    fontSize: 14,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textPrimary,
   },
   colorOptions: {
@@ -461,14 +470,13 @@ const styles = StyleSheet.create({
   colorOption: {
     width: 24,
     height: 24,
-    borderRadius: 4,
+    borderRadius: BorderRadius.tile,
     marginHorizontal: 2,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderWidth: 2,
+    borderColor: 'transparent',
   },
   colorOptionSelected: {
-    borderColor: Colors.textPrimary,
-    borderWidth: 2,
+    borderColor: Colors.accent,
   },
   removeButton: {
     padding: 4,
@@ -477,37 +485,34 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    padding: 12,
-    borderRadius: 8,
+    gap: Spacing.sm,
+    padding: Spacing.md,
+    borderRadius: BorderRadius.button,
     borderWidth: 1,
     borderColor: Colors.border,
     borderStyle: 'dashed',
   },
   addLevelText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textSecondary,
   },
   footer: {
-    padding: 16,
+    padding: Spacing.lg,
     paddingBottom: 32,
     backgroundColor: Colors.background,
-    borderTopWidth: 1,
-    borderTopColor: Colors.border,
   },
   saveButton: {
-    backgroundColor: Colors.textPrimary,
-    paddingVertical: 16,
-    borderRadius: 8,
+    paddingVertical: Spacing.lg,
+    borderRadius: BorderRadius.pill,
     alignItems: 'center',
+    overflow: 'hidden',
   },
   saveButtonDisabled: {
     opacity: 0.6,
   },
   saveButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: Colors.white,
+    fontSize: Typography.fontSize.bodyLarge,
+    fontWeight: Typography.fontWeight.semibold,
+    color: Colors.textOnGradient,
   },
 });
-

@@ -7,6 +7,7 @@ import React, { memo, useMemo } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { ProgressTile } from './ProgressTile';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
 import { HabitLevel } from '../models/Habit';
 import { Progress } from '../models/Progress';
 import {
@@ -43,7 +44,7 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
 }) => {
   // Organize dates into weeks (most recent first)
   const weeklyDates = useMemo(() => organizeDatesIntoWeeks(weeks), [weeks]);
-  
+
   // Create a map of date -> level for quick lookup
   const progressMap = useMemo(() => {
     const map = new Map<string, number>();
@@ -52,35 +53,35 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
     }
     return map;
   }, [progressData]);
-  
+
   // Get level for a specific date
   const getLevelForDate = (date: Date): number => {
     return progressMap.get(formatDate(date)) || 0;
   };
-  
+
   // Calculate if we need to show month label for a week
   const getMonthLabel = (weekDates: Date[]): string | null => {
     if (!showMonthLabels) return null;
-    
+
     // Check if any day in this week is the first of a month
     for (const date of weekDates) {
       if (isFirstDayOfMonth(date) && isSunday(date)) {
         return getShortMonth(date);
       }
     }
-    
+
     // For the first week, show the month of Sunday
     const sunday = weekDates[0];
     if (isFirstDayOfMonth(sunday) || weekDates === weeklyDates[weeklyDates.length - 1]) {
       return getShortMonth(sunday);
     }
-    
+
     return null;
   };
-  
+
   const actualTileSize = compact ? 20 : tileSize;
   const labelWidth = showMonthLabels && !compact ? 36 : 0;
-  
+
   return (
     <View style={styles.container}>
       {/* Day of week headers */}
@@ -89,23 +90,23 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
           {DAY_LABELS.map((label, index) => (
             <View
               key={index}
-              style={[styles.dayLabel, { width: actualTileSize + 2 }]}
+              style={[styles.dayLabel, { width: actualTileSize + 3 }]}
             >
               <Text style={styles.dayLabelText}>{label}</Text>
             </View>
           ))}
         </View>
       )}
-      
+
       {/* Grid rows (weeks) */}
-      <ScrollView 
+      <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
         nestedScrollEnabled
       >
         {weeklyDates.map((weekDates, weekIndex) => {
           const monthLabel = getMonthLabel(weekDates);
-          
+
           return (
             <View key={weekIndex} style={styles.weekRow}>
               {/* Month label */}
@@ -116,10 +117,10 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
                   )}
                 </View>
               )}
-              
+
               {/* Day tiles */}
               <View style={styles.tilesRow}>
-                {weekDates.map((date, dayIndex) => (
+                {weekDates.map((date) => (
                   <ProgressTile
                     key={formatDate(date)}
                     date={formatDate(date)}
@@ -151,11 +152,11 @@ const styles = StyleSheet.create({
   dayLabel: {
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 1,
+    margin: 1.5,
   },
   dayLabelText: {
-    fontSize: 10,
-    fontWeight: '600',
+    fontSize: Typography.fontSize.micro,
+    fontWeight: Typography.fontWeight.semibold,
     color: Colors.textSecondary,
   },
   scrollView: {
@@ -170,7 +171,7 @@ const styles = StyleSheet.create({
     paddingRight: 4,
   },
   monthLabelText: {
-    fontSize: 10,
+    fontSize: Typography.fontSize.micro,
     color: Colors.textSecondary,
   },
   tilesRow: {
@@ -179,4 +180,3 @@ const styles = StyleSheet.create({
 });
 
 ProgressGrid.displayName = 'ProgressGrid';
-

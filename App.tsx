@@ -8,6 +8,7 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useFonts, PlayfairDisplay_700Bold, PlayfairDisplay_600SemiBold } from '@expo-google-fonts/playfair-display';
 
 import { Colors } from './src/constants/colors';
 import { initializeDatabase } from './src/services/database';
@@ -27,7 +28,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 // Loading screen component
 const LoadingScreen: React.FC = () => (
   <View style={styles.loadingContainer}>
-    <ActivityIndicator size="large" color={Colors.textPrimary} />
+    <ActivityIndicator size="large" color={Colors.gradientStart} />
     <Text style={styles.loadingText}>Loading Inkrements...</Text>
   </View>
 );
@@ -35,6 +36,12 @@ const LoadingScreen: React.FC = () => (
 export default function App() {
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Load fonts
+  const [fontsLoaded] = useFonts({
+    PlayfairDisplay_700Bold,
+    PlayfairDisplay_600SemiBold,
+  });
 
   useEffect(() => {
     const init = async () => {
@@ -50,16 +57,17 @@ export default function App() {
     init();
   }, []);
 
+  // Wait for both fonts and database
+  if (!fontsLoaded || !isInitialized) {
+    return <LoadingScreen />;
+  }
+
   if (error) {
     return (
       <View style={styles.errorContainer}>
         <Text style={styles.errorText}>{error}</Text>
       </View>
     );
-  }
-
-  if (!isInitialized) {
-    return <LoadingScreen />;
   }
 
   return (
@@ -74,7 +82,8 @@ export default function App() {
             },
             headerTintColor: Colors.textPrimary,
             headerTitleStyle: {
-              fontWeight: '600',
+              fontFamily: 'PlayfairDisplay_700Bold',
+              fontSize: 20,
             },
             headerShadowVisible: false,
             contentStyle: {
@@ -124,6 +133,7 @@ const styles = StyleSheet.create({
   loadingText: {
     fontSize: 16,
     color: Colors.textSecondary,
+    fontFamily: 'PlayfairDisplay_600SemiBold',
   },
   errorContainer: {
     flex: 1,

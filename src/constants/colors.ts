@@ -1,45 +1,62 @@
 /**
- * Grayscale color palette for Inkrements v1
- * Following wireframe aesthetic with varying shades of gray
+ * Warm color palette for Inkrements redesign
+ * Replaces the original grayscale wireframe palette
  */
 
 export const Colors = {
-  // Base colors
+  // Background colors
+  background: '#FFF9F5',           // Soft cream/off-white
+  cardBackground: '#FFFFFF',        // Pure white for cards
+  cardBackgroundAlt: '#FEF7F2',    // Slightly warm card variant
+
+  // Primary gradient colors (peach/coral/orange)
+  gradientStart: '#F5A67A',        // Warm peach
+  gradientMid: '#FFB88C',          // Coral
+  gradientEnd: '#FFD4B8',          // Light peach
+
+  // Accent colors (lavender/purple)
+  accent: '#D4C5E8',               // Soft lavender
+  accentLight: '#E8D5F0',          // Lighter lavender
+  accentDark: '#B8A5D8',           // Darker lavender
+
+  // Progress level colors (warm tones replacing grayscale)
+  notTracked: '#F5EDE8',           // Very light warm gray (untracked tiles)
+  level1: '#FFD4B8',               // Light peach - Level 1
+  level2: '#FFB88C',               // Medium coral - Level 2
+  level3: '#F5A67A',               // Deep peach - Level 3
+
+  // Text colors
+  textPrimary: '#2D2A32',          // Near-black with warm undertone
+  textSecondary: '#6B6670',        // Warm medium gray
+  textTertiary: '#9B969F',         // Light warm gray
+  textOnGradient: '#FFFFFF',       // White text on gradient backgrounds
+
+  // Interactive states
+  pressed: '#FEF0E8',              // Warm pressed state
+  disabled: '#E8E4E0',             // Warm disabled gray
+
+  // Borders and dividers
+  border: '#F0E8E2',               // Soft warm border
+  borderDark: '#E0D6D0',           // Darker warm border
+
+  // Semantic colors
+  error: '#E07070',                // Soft red
+  errorLight: '#FDE8E8',           // Light red background
+  success: '#70B070',              // Soft green
+  successLight: '#E8F5E8',         // Light green background
+
+  // Utility
   white: '#FFFFFF',
   black: '#000000',
-  
-  // Progress level colors (grayscale)
-  notTracked: '#F5F5F5',      // Very light gray - empty/untracked tiles
-  level1: '#CCCCCC',          // Light gray - Binary completion / Level 1
-  level2: '#888888',          // Medium gray - Level 2
-  level3: '#444444',          // Dark gray - Level 3
-  
-  // UI element colors
-  background: '#FFFFFF',       // App background
-  cardBackground: '#FAFAFA',   // Card/tile background
-  border: '#E0E0E0',          // Borders and dividers
-  borderDark: '#CCCCCC',      // Darker borders for emphasis
-  
-  // Text colors
-  textPrimary: '#000000',     // Primary text
-  textSecondary: '#666666',   // Secondary/muted text
-  textTertiary: '#999999',    // Tertiary/placeholder text
-  
-  // Interactive states
-  pressed: '#E8E8E8',         // Pressed state background
-  disabled: '#CCCCCC',        // Disabled state
-  
-  // Semantic colors (still grayscale for v1)
-  error: '#666666',           // Error state (dark gray)
-  success: '#444444',         // Success state (darker gray)
+  overlay: 'rgba(45, 42, 50, 0.5)', // Warm dark overlay for modals
 } as const;
 
 // Progress level color mapping
 export const ProgressLevelColors = {
-  0: Colors.notTracked,  // Not tracked
-  1: Colors.level1,      // Level 1 / Binary completed
-  2: Colors.level2,      // Level 2
-  3: Colors.level3,      // Level 3
+  0: Colors.notTracked,
+  1: Colors.level1,
+  2: Colors.level2,
+  3: Colors.level3,
 } as const;
 
 // Get color for a specific progress level
@@ -48,4 +65,3 @@ export const getProgressColor = (level: number): string => {
   if (level >= 3) return Colors.level3;
   return ProgressLevelColors[level as keyof typeof ProgressLevelColors] || Colors.notTracked;
 };
-

@@ -7,10 +7,9 @@ import {
   View,
   TouchableOpacity,
   StyleSheet,
-  Text,
-  GestureResponderEvent,
 } from 'react-native';
 import { Colors } from '../constants/colors';
+import { BorderRadius } from '../constants/spacing';
 import { getColorForLevel } from '../utils/colorUtils';
 import { HabitLevel } from '../models/Habit';
 import { isWithinLoggingRange, isFutureDate, isToday } from '../utils/dateUtils';
@@ -38,19 +37,19 @@ export const ProgressTile: React.FC<ProgressTileProps> = memo(({
   const isFuture = isFutureDate(date);
   const canLog = isWithinLoggingRange(date);
   const backgroundColor = getColorForLevel(level, habitLevels);
-  
+
   const handlePress = useCallback(() => {
     if (canLog && onPress) {
       onPress(date);
     }
   }, [canLog, onPress, date]);
-  
+
   const handleLongPress = useCallback(() => {
     if (level > 0 && onLongPress) {
       onLongPress(date);
     }
   }, [level, onLongPress, date]);
-  
+
   // Future dates are not interactive
   if (isFuture) {
     return (
@@ -63,7 +62,7 @@ export const ProgressTile: React.FC<ProgressTileProps> = memo(({
       />
     );
   }
-  
+
   return (
     <TouchableOpacity
       onPress={handlePress}
@@ -72,8 +71,8 @@ export const ProgressTile: React.FC<ProgressTileProps> = memo(({
       activeOpacity={0.7}
       style={[
         styles.tile,
-        { 
-          width: size, 
+        {
+          width: size,
           height: size,
           backgroundColor,
         },
@@ -91,10 +90,10 @@ export const ProgressTile: React.FC<ProgressTileProps> = memo(({
 
 const styles = StyleSheet.create({
   tile: {
-    borderRadius: 4,
+    borderRadius: BorderRadius.tile,
     borderWidth: 1,
     borderColor: Colors.border,
-    margin: 1,
+    margin: 1.5,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -103,7 +102,7 @@ const styles = StyleSheet.create({
     opacity: 0.3,
   },
   todayTile: {
-    borderColor: Colors.textPrimary,
+    borderColor: Colors.accent,
     borderWidth: 2,
   },
   disabledTile: {
@@ -113,9 +112,8 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: Colors.textSecondary,
+    backgroundColor: Colors.accent,
   },
 });
 
 ProgressTile.displayName = 'ProgressTile';
-
