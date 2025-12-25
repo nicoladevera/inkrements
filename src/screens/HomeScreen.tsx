@@ -10,15 +10,11 @@ import {
   TouchableOpacity,
   Text,
   Alert,
+  FlatList,
 } from 'react-native';
 import { useNavigation, useFocusEffect } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import DraggableFlatList, {
-  RenderItemParams,
-  ScaleDecorator,
-} from 'react-native-draggable-flatlist';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Colors } from '../constants/colors';
 import { Habit } from '../models/Habit';
@@ -184,40 +180,17 @@ export const HomeScreen: React.FC = () => {
     }
   }, [selectedHabit, selectedDate, loadData]);
   
-  // Handle drag end (reorder)
-  const handleDragEnd = useCallback(async ({ data }: { data: HabitWithProgress[] }) => {
-    setHabitsWithProgress(data);
-    
-    // Save new order to database
-    const habitIds = data.map(item => item.habit.id);
-    try {
-      await reorderHabits(habitIds);
-    } catch (error) {
-      console.error('Error reordering habits:', error);
-      // Reload to restore original order
-      loadData();
-    }
-  }, [loadData]);
-  
-  // Render habit card for draggable list
-  const renderHabitCard = useCallback(({ item, drag, isActive }: RenderItemParams<HabitWithProgress>) => {
+  // Render habit card for list
+  const renderHabitCard = useCallback(({ item }: { item: HabitWithProgress }) => {
     return (
-      <ScaleDecorator>
-        <TouchableOpacity
-          onLongPress={drag}
-          disabled={isActive}
-          activeOpacity={1}
-        >
-          <HabitCard
-            habit={item.habit}
-            progressData={item.progress}
-            onPress={handleHabitPress}
-            onTilePress={handleTilePress}
-            onTileLongPress={handleTileLongPress}
-            isDragging={isActive}
-          />
-        </TouchableOpacity>
-      </ScaleDecorator>
+      <HabitCard
+        habit={item.habit}
+        progressData={item.progress}
+        onPress={handleHabitPress}
+        onTilePress={handleTilePress}
+        onTileLongPress={handleTileLongPress}
+        isDragging={false}
+      />
     );
   }, [handleHabitPress, handleTilePress, handleTileLongPress]);
   
@@ -231,12 +204,11 @@ export const HomeScreen: React.FC = () => {
   }
   
   return (
-    <GestureHandlerRootView style={styles.container}>
-      <DraggableFlatList
+    <View style={styles.container}>
+      <FlatList
         data={habitsWithProgress}
         keyExtractor={(item) => item.habit.id}
         renderItem={renderHabitCard}
-        onDragEnd={handleDragEnd}
         contentContainerStyle={styles.listContent}
         refreshControl={
           <RefreshControl
@@ -270,7 +242,7 @@ export const HomeScreen: React.FC = () => {
           isEditing={isEditing}
         />
       )}
-    </GestureHandlerRootView>
+    </View>
   );
 };
 

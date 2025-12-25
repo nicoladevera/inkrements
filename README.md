@@ -11,7 +11,7 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 ### Habit Management
 - **Create custom habits** with personalized icons and names
 - **Two tracking modes**: Binary (done/not done) or Level-based (varying intensities)
-- **Drag-and-drop reordering** to organize habits your way
+- **Organized list view** to manage all your habits
 - **Edit and delete** habits with confirmation prompts
 
 ### Progress Tracking
@@ -133,8 +133,8 @@ inkrements/
   - Web: @react-native-async-storage/async-storage
 - **Date Handling**: date-fns
 - **Icons**: @expo/vector-icons (MaterialCommunityIcons)
-- **Drag & Drop**: react-native-draggable-flatlist
-- **Gestures**: react-native-gesture-handler, react-native-reanimated
+- **UI Components**: React Native core components (FlatList, ScrollView, etc.)
+- **Gestures**: react-native-gesture-handler (for navigation)
 
 ## 📋 Development Roadmap
 
@@ -143,10 +143,11 @@ inkrements/
 - ✅ Binary and level-based tracking
 - ✅ Progress grid visualization
 - ✅ Local data persistence
-- ✅ Habit reordering
 - ✅ Grayscale UI
+- ✅ Expo Go compatible (no custom native modules)
 
 ### v2.0 (Planned)
+- [ ] Drag-and-drop habit reordering (requires custom dev client)
 - [ ] Color customization for habits
 - [ ] Habit archiving
 - [ ] Enhanced statistics (streaks, trends)
@@ -166,10 +167,17 @@ This is currently a personal project, but suggestions and feedback are welcome! 
 
 ## 📝 Documentation
 
+- [Mobile Testing Guide](MOBILE_TESTING.md) - Testing on devices, simulators, and troubleshooting
 - [Product Requirements Document (PRD)](tasks/prd-inkrements-habit-tracker.md)
 - [Task List](tasks/tasks-inkrements-habit-tracker.md)
 
 ## 🔧 Troubleshooting
+
+### Package compatibility issues
+See the [Mobile Testing Guide](MOBILE_TESTING.md#worklets-version-mismatch-error) for detailed troubleshooting steps, especially for:
+- Worklets version mismatch errors
+- Native module compatibility with Expo Go
+- When to use custom development client vs Expo Go
 
 ### Web version not loading
 The web version uses AsyncStorage for data persistence. Ensure you have `@react-native-async-storage/async-storage` installed:
@@ -187,6 +195,12 @@ npx expo install expo-sqlite
 Run type checking:
 ```bash
 npx tsc --noEmit
+```
+
+### Version compatibility
+Always use `npx expo install` for Expo packages to ensure SDK compatibility:
+```bash
+npx expo install <package-name>
 ```
 
 ## 📄 License

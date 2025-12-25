@@ -134,26 +134,61 @@ Android device emulator for testing on Android devices.
 
 ---
 
-### 4. Development Build (Advanced)
+### 4. Custom Development Client (Advanced)
 
-For testing closer to production, you can create a development build.
+For testing with packages incompatible with Expo Go or closer to production builds.
 
 #### When to Use
+- **Native module conflicts** (e.g., worklets version mismatches)
 - Testing native modules not supported in Expo Go
+- Using packages like `react-native-draggable-flatlist` that require specific native versions
 - Performance testing closer to production
-- Testing app icons, splash screens, etc.
+- Testing app icons, splash screens, custom fonts, etc.
+
+#### Key Differences from Expo Go
+
+| Feature | Expo Go | Custom Dev Client |
+|---------|---------|-------------------|
+| Setup time | Instant | Requires build (~5-10 min first time) |
+| Native modules | Fixed versions | Full control |
+| Package compatibility | Limited to Expo Go versions | Any package |
+| Rebuild required | Never | When native deps change |
+| File size | Provided by Expo | Custom per project |
 
 #### Setup
 
-```bash
-# iOS
-npx expo run:ios
+1. **Install expo-dev-client:**
+   ```bash
+   npx expo install expo-dev-client
+   ```
 
-# Android
-npx expo run:android
-```
+2. **Build and run:**
+   ```bash
+   # iOS (requires macOS with Xcode)
+   npx expo run:ios
+   
+   # Android (requires Android Studio)
+   npx expo run:android
+   ```
 
-This creates a native build on your simulator/emulator or connected device.
+3. **Development workflow:**
+   - First build takes 5-10 minutes
+   - Subsequent JavaScript changes hot-reload instantly (like Expo Go)
+   - Only rebuild when you add/update native dependencies
+
+#### Benefits
+- Resolve worklets and other native module version conflicts
+- Use any React Native package
+- Closer to production environment
+- Full control over native code
+
+#### Trade-offs
+- Initial setup time
+- Need native development tools (Xcode/Android Studio)
+- Larger app file size
+- Must rebuild after native dependency changes
+
+**Tip:** Start with Expo Go for rapid prototyping. Switch to custom dev client only when you hit compatibility issues or need specific native features.
 
 ---
 
@@ -163,23 +198,86 @@ This creates a native build on your simulator/emulator or connected device.
 
 If you see:
 ```
-WorkletsError: Mismatch between JavaScript part and native part of Worklets
+WorkletsError: Mismatch between JavaScript part and native part of Worklets (0.7.1 vs 0.5.1)
 ```
 
-**Fix:**
-```bash
-# Clear all caches
-watchman watch-del-all
-rm -rf node_modules .expo
+**Root Cause:**
+This error occurs when packages in your project require a newer version of `react-native-worklets-core` than what's baked into Expo Go's native modules. This is a **fundamental Expo Go limitation** - you cannot update native modules in Expo Go.
 
-# Reinstall dependencies
+**Common Culprits:**
+- `react-native-draggable-flatlist` (requires Reanimated 4.x with Worklets 0.7.x)
+- Newer versions of `react-native-reanimated` that don't match your Expo SDK
+- Any package that uses advanced gesture/animation features
+
+**Solution 1: Use Expo SDK Compatible Versions (Recommended for Expo Go)**
+
+First, check what versions your Expo SDK expects:
+```bash
+npx expo start
+# Look for warnings like: "react-native-reanimated@X.X.X - expected version: ~Y.Y.Y"
+```
+
+Then align your packages:
+```bash
+# Clear everything
+rm -rf node_modules package-lock.json
+npm cache clean --force
+
+# Update package.json to use the expected versions (e.g., for SDK 54):
+# "react-native-reanimated": "~4.1.1"
+# "react-native-gesture-handler": "~2.28.0"
+# "react-native-screens": "~4.16.0"
+
+# Reinstall
 npm install
 
 # Start with cleared cache
 npx expo start --clear
 ```
 
-Then reload the app on your device/simulator.
+**Solution 2: Remove Incompatible Packages**
+
+If a package (like `react-native-draggable-flatlist`) causes the error, you have two options:
+
+A. Replace it with Expo Go compatible alternatives:
+```bash
+# Remove the problematic package
+npm uninstall react-native-draggable-flatlist
+
+# Use standard React Native components instead (e.g., FlatList)
+```
+
+B. Switch to a custom development client (see section below)
+
+**Solution 3: Build a Custom Development Client**
+
+For full control over native dependencies:
+```bash
+# Install expo-dev-client
+npx expo install expo-dev-client
+
+# Build for iOS
+npx expo run:ios
+
+# Build for Android
+npx expo run:android
+```
+
+This gives you a custom native build with your exact package versions, but requires:
+- More setup time
+- Xcode (iOS) or Android Studio (Android)
+- Rebuilding after native dependency changes
+
+**When to Use Each Solution:**
+- **Solution 1**: Best for quick development with Expo Go
+- **Solution 2**: When you don't need the specific feature (e.g., drag-to-reorder)
+- **Solution 3**: When you need packages incompatible with Expo Go
+
+**Prevention Tips:**
+1. Always check Expo SDK compatibility before adding packages
+2. Use `npx expo install <package>` instead of `npm install` when possible (auto-installs correct versions)
+3. Review package warnings when starting the dev server
+4. Test in Expo Go early when adding new animation/gesture packages
 
 ---
 
@@ -228,18 +326,34 @@ open -a Simulator
    npx expo start --clear
    ```
 
-2. **Check for TypeScript errors:**
+2. **Check for version compatibility issues:**
+   ```bash
+   npx expo start
+   # Look for package version warnings in the terminal output
+   ```
+   If you see warnings like "expected version: ~X.X.X", align your packages:
+   ```bash
+   # Use expo install to get compatible versions
+   npx expo install <package-name>
+   ```
+
+3. **Check for TypeScript errors:**
    ```bash
    npx tsc --noEmit
    ```
 
-3. **Reset Expo Go app cache:**
+4. **Reset Expo Go app cache:**
    - iOS: Shake device → "Reload"
    - Android: Device menu → "Reload"
 
-4. **Check logs:**
+5. **Check logs:**
    - Terminal shows bundler logs
    - Expo Go app may show red error screen with details
+   - Look for errors mentioning "HostFunction", "Worklets", or native modules
+
+6. **If native module errors persist:**
+   - Check if packages are compatible with Expo Go
+   - Consider switching to custom development client (see Development Build section)
 
 ---
 
@@ -266,6 +380,7 @@ open -a Simulator
    - Most accurate touch interactions
    - Real performance feedback
    - Easy to carry around and test throughout the day
+   - **Limitation**: Can only use packages compatible with Expo Go's native modules
 
 2. **Quick iterations**: Use iOS Simulator
    - Faster to launch and test
@@ -276,6 +391,36 @@ open -a Simulator
    - Gesture behaviors differ
    - Font rendering varies
    - Safe area handling differs
+
+4. **When adding new packages**: Check compatibility first
+   - Review package documentation for Expo Go compatibility
+   - Use `npx expo install <package>` to auto-install correct versions
+   - Test in Expo Go immediately after adding animation/gesture packages
+   - If worklets errors appear, decide: remove package, use alternative, or switch to dev client
+
+### Package Management Best Practices
+
+1. **Use `npx expo install` for Expo packages:**
+   ```bash
+   # Good - automatically installs SDK-compatible version
+   npx expo install react-native-reanimated
+   
+   # Risky - may install incompatible version
+   npm install react-native-reanimated
+   ```
+
+2. **Monitor version warnings:**
+   - When starting dev server, check for "expected version" warnings
+   - Address these early to prevent runtime errors
+
+3. **Before adding gesture/animation packages:**
+   - Check if they require specific native module versions
+   - Verify compatibility with your Expo SDK version
+   - Have a backup plan (alternative package or custom dev client)
+
+4. **Document native dependencies:**
+   - Keep track of packages that require specific native versions
+   - Note which features require custom dev client vs work in Expo Go
 
 ### What to Test on Mobile
 
@@ -291,6 +436,8 @@ open -a Simulator
 
 ## Quick Reference
 
+### Common Commands
+
 | Method | Command | Best For |
 |--------|---------|----------|
 | Expo Go (iOS) | `npm start` → scan QR | Real device testing |
@@ -299,7 +446,48 @@ open -a Simulator
 | Android Emulator | `npm start` → press `a` | Android testing |
 | Clear cache | `npx expo start --clear` | Fixing cache issues |
 | Reload app | Shake device or `Cmd+R` | Applying changes |
+| Install Expo package | `npx expo install <package>` | Get SDK-compatible version |
+| Check compatibility | `npx expo start` (watch for warnings) | Verify package versions |
+| Custom dev client | `npx expo run:ios` or `run:android` | Native module conflicts |
+
+### Troubleshooting Checklist
+
+**When you encounter errors in Expo Go:**
+
+1. ✅ Check terminal for package version warnings
+2. ✅ Clear cache: `npx expo start --clear`
+3. ✅ Reinstall with correct versions: `rm -rf node_modules && npm install`
+4. ✅ Verify packages are Expo Go compatible
+5. ✅ If worklets/native errors persist: Consider custom dev client
+
+**Package Compatibility Red Flags:**
+- ⚠️ Errors mentioning "Worklets", "HostFunction", or version mismatches
+- ⚠️ Warnings about "expected version" on dev server start
+- ⚠️ Packages requiring specific native module versions
+- ⚠️ Animation/gesture libraries with recent major updates
 
 ---
 
-**Remember**: The browser is convenient but not representative. Always test on actual devices or simulators for accurate mobile UX feedback.
+## Project-Specific Notes
+
+**Inkrements App Configuration:**
+- **Expo SDK**: 54
+- **React Native**: 0.81.5
+- **Reanimated**: ~4.1.1 (must match Expo Go's native version)
+- **Gesture Handler**: ~2.28.0 (must match Expo Go)
+- **Screens**: ~4.16.0 (must match Expo Go)
+
+**Known Incompatibilities with Expo Go:**
+- ❌ `react-native-draggable-flatlist` v4.x (requires Worklets 0.7.x, Expo Go has 0.5.x)
+  - **Alternative**: Use standard `FlatList` or build custom dev client
+
+**Working Features in Expo Go:**
+- ✅ SQLite database (expo-sqlite)
+- ✅ Navigation (React Navigation)
+- ✅ Basic animations (Reanimated 4.1.x)
+- ✅ Touch gestures (Gesture Handler 2.28.x)
+- ✅ All standard React Native components
+
+---
+
+**Remember**: The browser is convenient but not representative. Always test on actual devices or simulators for accurate mobile UX feedback. When adding packages with native dependencies, test in Expo Go immediately to catch compatibility issues early.

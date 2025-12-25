@@ -8,7 +8,6 @@ import { StatusBar } from 'expo-status-bar';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { Colors } from './src/constants/colors';
 import { initializeDatabase } from './src/services/database';
@@ -64,7 +63,7 @@ export default function App() {
   }
 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <View style={styles.container}>
       <NavigationContainer>
         <StatusBar style="dark" />
         <Stack.Navigator
@@ -108,7 +107,7 @@ export default function App() {
           />
         </Stack.Navigator>
       </NavigationContainer>
-    </GestureHandlerRootView>
+    </View>
   );
 }
 
