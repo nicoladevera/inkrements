@@ -7,6 +7,8 @@ import React, { memo, useCallback } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { Shadows, BorderRadius, Spacing } from '../constants/spacing';
+import { Typography } from '../constants/typography';
 import { Habit } from '../models/Habit';
 import { Progress } from '../models/Progress';
 import { ProgressGrid } from './ProgressGrid';
@@ -31,19 +33,19 @@ export const HabitCard: React.FC<HabitCardProps> = memo(({
   const handlePress = useCallback(() => {
     onPress(habit.id);
   }, [onPress, habit.id]);
-  
+
   const handleTilePress = useCallback((date: string) => {
     if (onTilePress) {
       onTilePress(habit.id, date);
     }
   }, [onTilePress, habit.id]);
-  
+
   const handleTileLongPress = useCallback((date: string) => {
     if (onTileLongPress) {
       onTileLongPress(habit.id, date);
     }
   }, [onTileLongPress, habit.id]);
-  
+
   return (
     <TouchableOpacity
       style={[styles.container, isDragging && styles.dragging]}
@@ -54,22 +56,22 @@ export const HabitCard: React.FC<HabitCardProps> = memo(({
       {/* Header with icon and name */}
       <View style={styles.header}>
         <View style={styles.iconContainer}>
-          <MaterialCommunityIcons 
-            name={habit.icon as any} 
-            size={24} 
-            color={Colors.textPrimary} 
+          <MaterialCommunityIcons
+            name={habit.icon as any}
+            size={24}
+            color={Colors.textPrimary}
           />
         </View>
         <Text style={styles.habitName} numberOfLines={1}>
           {habit.name}
         </Text>
-        <MaterialCommunityIcons 
-          name="chevron-right" 
-          size={20} 
-          color={Colors.textTertiary} 
+        <MaterialCommunityIcons
+          name="chevron-right"
+          size={20}
+          color={Colors.textTertiary}
         />
       </View>
-      
+
       {/* Compact 4-week progress grid */}
       <View style={styles.gridContainer}>
         <ProgressGrid
@@ -91,41 +93,34 @@ export const HabitCard: React.FC<HabitCardProps> = memo(({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: Colors.cardBackground,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: BorderRadius.card,
+    padding: Spacing.xl,
+    marginBottom: Spacing.md,
+    ...Shadows.card,
   },
   dragging: {
-    opacity: 0.8,
+    opacity: 0.9,
     transform: [{ scale: 1.02 }],
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 8,
+    ...Shadows.cardHover,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 12,
+    marginBottom: Spacing.md,
   },
   iconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 8,
-    backgroundColor: Colors.background,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    width: 44,
+    height: 44,
+    borderRadius: BorderRadius.icon,
+    backgroundColor: Colors.accentLight,
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
+    marginRight: Spacing.md,
   },
   habitName: {
     flex: 1,
-    fontSize: 16,
-    fontWeight: '600',
+    fontFamily: Typography.fontFamily.serifMedium,
+    fontSize: Typography.fontSize.title,
     color: Colors.textPrimary,
   },
   gridContainer: {
@@ -134,4 +129,3 @@ const styles = StyleSheet.create({
 });
 
 HabitCard.displayName = 'HabitCard';
-

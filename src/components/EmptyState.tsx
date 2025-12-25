@@ -6,7 +6,10 @@
 import React, { memo } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { BorderRadius } from '../constants/spacing';
 
 interface EmptyStateProps {
   onCreateHabit: () => void;
@@ -16,27 +19,33 @@ export const EmptyState: React.FC<EmptyStateProps> = memo(({ onCreateHabit }) =>
   return (
     <View style={styles.container}>
       <View style={styles.iconContainer}>
-        <MaterialCommunityIcons 
-          name="sprout" 
-          size={64} 
-          color={Colors.textSecondary} 
+        <MaterialCommunityIcons
+          name="sprout"
+          size={64}
+          color={Colors.accent}
         />
       </View>
-      
+
       <Text style={styles.title}>Ready to build better habits?</Text>
       <Text style={styles.subtitle}>
         Start tracking your daily progress and watch your consistency grow over time.
       </Text>
-      
+
       <TouchableOpacity
         style={styles.button}
         onPress={onCreateHabit}
         activeOpacity={0.8}
       >
-        <MaterialCommunityIcons 
-          name="plus" 
-          size={20} 
-          color={Colors.white} 
+        <LinearGradient
+          colors={[Colors.gradientStart, Colors.gradientMid, Colors.gradientEnd]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={StyleSheet.absoluteFill}
+        />
+        <MaterialCommunityIcons
+          name="plus"
+          size={20}
+          color={Colors.textOnGradient}
         />
         <Text style={styles.buttonText}>Create Your First Habit</Text>
       </TouchableOpacity>
@@ -55,14 +64,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   title: {
-    fontSize: 22,
-    fontWeight: '600',
+    fontFamily: Typography.fontFamily.serif,
+    fontSize: Typography.fontSize.headline,
     color: Colors.textPrimary,
     textAlign: 'center',
     marginBottom: 12,
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: Typography.fontSize.body,
     color: Colors.textSecondary,
     textAlign: 'center',
     lineHeight: 22,
@@ -73,17 +82,16 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 8,
-    backgroundColor: Colors.textPrimary,
     paddingVertical: 14,
     paddingHorizontal: 24,
-    borderRadius: 8,
+    borderRadius: BorderRadius.pill,
+    overflow: 'hidden',
   },
   buttonText: {
     fontSize: 16,
     fontWeight: '600',
-    color: Colors.white,
+    color: Colors.textOnGradient,
   },
 });
 
 EmptyState.displayName = 'EmptyState';
-

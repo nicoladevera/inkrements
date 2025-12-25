@@ -5,6 +5,8 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { BorderRadius, Shadows, Spacing } from '../constants/spacing';
 import { HabitLevel, TrackingType } from '../models/Habit';
 
 interface LevelLegendProps {
@@ -25,15 +27,15 @@ export const LevelLegend: React.FC<LevelLegendProps> = memo(({
           <View style={[styles.colorSwatch, { backgroundColor: Colors.notTracked }]} />
           <Text style={styles.legendText}>Not tracked</Text>
         </View>
-        
+
         {/* Level items */}
         {levels.map((level, index) => (
           <View key={index} style={styles.legendItem}>
-            <View 
+            <View
               style={[
-                styles.colorSwatch, 
+                styles.colorSwatch,
                 { backgroundColor: level.colorValue }
-              ]} 
+              ]}
             />
             <Text style={styles.legendText}>
               {trackingType === 'binary' ? 'Completed' : level.name}
@@ -47,42 +49,40 @@ export const LevelLegend: React.FC<LevelLegendProps> = memo(({
 
 const styles = StyleSheet.create({
   container: {
-    padding: 12,
+    padding: Spacing.lg,
     backgroundColor: Colors.cardBackground,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: Colors.border,
+    borderRadius: BorderRadius.card,
+    ...Shadows.card,
   },
   title: {
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: Typography.fontSize.caption,
+    fontWeight: Typography.fontWeight.semibold,
     color: Colors.textSecondary,
-    marginBottom: 8,
+    marginBottom: Spacing.sm,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: Typography.letterSpacing.wide,
   },
   legendItems: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 12,
+    gap: Spacing.md,
   },
   legendItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: Spacing.sm,
   },
   colorSwatch: {
     width: 16,
     height: 16,
-    borderRadius: 3,
+    borderRadius: BorderRadius.tile,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   legendText: {
-    fontSize: 13,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textPrimary,
   },
 });
 
 LevelLegend.displayName = 'LevelLegend';
-

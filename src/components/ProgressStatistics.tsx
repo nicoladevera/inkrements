@@ -6,6 +6,8 @@
 import React, { memo } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { Spacing } from '../constants/spacing';
 import { ProgressStatistics as Stats } from '../utils/statisticsUtils';
 
 interface ProgressStatisticsProps {
@@ -33,18 +35,17 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: Spacing.sm,
   },
   mainText: {
-    fontSize: 16,
+    fontSize: Typography.fontSize.bodyLarge,
     color: Colors.textPrimary,
-    fontWeight: '500',
+    fontWeight: Typography.fontWeight.medium,
   },
   percentageText: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textSecondary,
   },
 });
 
 ProgressStatistics.displayName = 'ProgressStatistics';
-

@@ -13,6 +13,8 @@ import {
 } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Colors } from '../constants/colors';
+import { Typography } from '../constants/typography';
+import { BorderRadius, Shadows, Spacing } from '../constants/spacing';
 import { HabitLevel, TrackingType } from '../models/Habit';
 import { formatDisplayDate, parseDateString } from '../utils/dateUtils';
 
@@ -40,7 +42,7 @@ export const LevelSelectorModal: React.FC<LevelSelectorModalProps> = memo(({
   isEditing = false,
 }) => {
   const displayDate = formatDisplayDate(parseDateString(date));
-  
+
   return (
     <Modal
       visible={visible}
@@ -54,7 +56,7 @@ export const LevelSelectorModal: React.FC<LevelSelectorModalProps> = memo(({
             {isEditing ? 'Edit Progress' : 'Log Progress'}
           </Text>
           <Text style={styles.date}>{displayDate}</Text>
-          
+
           <View style={styles.levelsContainer}>
             {trackingType === 'binary' ? (
               // Binary habit - single completion option
@@ -66,18 +68,18 @@ export const LevelSelectorModal: React.FC<LevelSelectorModalProps> = memo(({
                 onPress={() => onSelectLevel(1)}
                 activeOpacity={0.7}
               >
-                <View 
+                <View
                   style={[
                     styles.colorIndicator,
                     { backgroundColor: levels[0]?.colorValue || Colors.level2 }
-                  ]} 
+                  ]}
                 />
                 <Text style={styles.levelText}>Mark as Completed</Text>
                 {currentLevel === 1 && (
-                  <MaterialCommunityIcons 
-                    name="check" 
-                    size={20} 
-                    color={Colors.textPrimary} 
+                  <MaterialCommunityIcons
+                    name="check"
+                    size={20}
+                    color={Colors.accent}
                   />
                 )}
               </TouchableOpacity>
@@ -93,25 +95,25 @@ export const LevelSelectorModal: React.FC<LevelSelectorModalProps> = memo(({
                   onPress={() => onSelectLevel(index + 1)}
                   activeOpacity={0.7}
                 >
-                  <View 
+                  <View
                     style={[
                       styles.colorIndicator,
                       { backgroundColor: level.colorValue }
-                    ]} 
+                    ]}
                   />
                   <Text style={styles.levelText}>{level.name}</Text>
                   {currentLevel === index + 1 && (
-                    <MaterialCommunityIcons 
-                      name="check" 
-                      size={20} 
-                      color={Colors.textPrimary} 
+                    <MaterialCommunityIcons
+                      name="check"
+                      size={20}
+                      color={Colors.accent}
                     />
                   )}
                 </TouchableOpacity>
               ))
             )}
           </View>
-          
+
           {/* Delete option when editing */}
           {isEditing && currentLevel > 0 && onDelete && (
             <TouchableOpacity
@@ -119,15 +121,15 @@ export const LevelSelectorModal: React.FC<LevelSelectorModalProps> = memo(({
               onPress={onDelete}
               activeOpacity={0.7}
             >
-              <MaterialCommunityIcons 
-                name="delete-outline" 
-                size={20} 
-                color={Colors.error} 
+              <MaterialCommunityIcons
+                name="delete-outline"
+                size={20}
+                color={Colors.error}
               />
               <Text style={styles.deleteText}>Remove Progress</Text>
             </TouchableOpacity>
           )}
-          
+
           {/* Cancel button */}
           <TouchableOpacity
             style={styles.cancelButton}
@@ -145,86 +147,87 @@ export const LevelSelectorModal: React.FC<LevelSelectorModalProps> = memo(({
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: Colors.overlay,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 24,
+    padding: Spacing.xxl,
   },
   content: {
-    backgroundColor: Colors.background,
-    borderRadius: 12,
-    padding: 20,
+    backgroundColor: Colors.cardBackground,
+    borderRadius: BorderRadius.modal,
+    padding: Spacing.xxl,
     width: '100%',
     maxWidth: 320,
+    ...Shadows.cardHover,
   },
   title: {
-    fontSize: 18,
-    fontWeight: '600',
+    fontFamily: Typography.fontFamily.serif,
+    fontSize: Typography.fontSize.title,
     color: Colors.textPrimary,
     textAlign: 'center',
     marginBottom: 4,
   },
   date: {
-    fontSize: 14,
+    fontSize: Typography.fontSize.bodySmall,
     color: Colors.textSecondary,
     textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: Spacing.xl,
   },
   levelsContainer: {
-    gap: 8,
-    marginBottom: 16,
+    gap: Spacing.sm,
+    marginBottom: Spacing.lg,
   },
   levelButton: {
     flexDirection: 'row',
     alignItems: 'center',
     paddingVertical: 14,
-    paddingHorizontal: 16,
-    borderRadius: 8,
+    paddingHorizontal: Spacing.lg,
+    borderRadius: BorderRadius.button,
     borderWidth: 1,
     borderColor: Colors.border,
-    backgroundColor: Colors.cardBackground,
+    backgroundColor: Colors.cardBackgroundAlt,
   },
   levelButtonSelected: {
-    borderColor: Colors.textPrimary,
+    borderColor: Colors.accent,
     borderWidth: 2,
+    backgroundColor: Colors.accentLight,
   },
   colorIndicator: {
     width: 20,
     height: 20,
-    borderRadius: 4,
-    marginRight: 12,
+    borderRadius: BorderRadius.tile,
+    marginRight: Spacing.md,
     borderWidth: 1,
     borderColor: Colors.border,
   },
   levelText: {
     flex: 1,
-    fontSize: 15,
+    fontSize: Typography.fontSize.body,
     color: Colors.textPrimary,
   },
   deleteButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: 8,
-    paddingVertical: 12,
-    marginTop: 8,
+    gap: Spacing.sm,
+    paddingVertical: Spacing.md,
+    marginTop: Spacing.sm,
     borderTopWidth: 1,
     borderTopColor: Colors.border,
   },
   deleteText: {
-    fontSize: 15,
+    fontSize: Typography.fontSize.body,
     color: Colors.error,
   },
   cancelButton: {
-    paddingVertical: 12,
-    marginTop: 8,
+    paddingVertical: Spacing.md,
+    marginTop: Spacing.sm,
   },
   cancelText: {
-    fontSize: 15,
+    fontSize: Typography.fontSize.body,
     color: Colors.textSecondary,
     textAlign: 'center',
   },
 });
 
 LevelSelectorModal.displayName = 'LevelSelectorModal';
-
