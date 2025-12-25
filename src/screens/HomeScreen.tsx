@@ -229,7 +229,7 @@ export const HomeScreen: React.FC = () => {
       </TouchableOpacity>
       
       {/* Level Selector Modal */}
-      {selectedHabit && (
+      {selectedHabit && selectedDate && (
         <LevelSelectorModal
           visible={modalVisible}
           onClose={() => setModalVisible(false)}

@@ -259,19 +259,21 @@ export const HabitDetailScreen: React.FC = () => {
           showMonthLabels
         />
       </View>
-      
+
       {/* Level Selector Modal */}
-      <LevelSelectorModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSelectLevel={handleSelectLevel}
-        onDelete={handleDeleteProgress}
-        levels={habit.levels}
-        trackingType={habit.trackingType}
-        date={selectedDate}
-        currentLevel={currentLevel}
-        isEditing={isEditing}
-      />
+      {selectedDate && (
+        <LevelSelectorModal
+          visible={modalVisible}
+          onClose={() => setModalVisible(false)}
+          onSelectLevel={handleSelectLevel}
+          onDelete={handleDeleteProgress}
+          levels={habit.levels}
+          trackingType={habit.trackingType}
+          date={selectedDate}
+          currentLevel={currentLevel}
+          isEditing={isEditing}
+        />
+      )}
     </ScrollView>
   );
 };

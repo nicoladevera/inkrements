@@ -3,7 +3,7 @@
  */
 
 import { Progress } from '../models/Progress';
-import { formatDate, getCurrentDate, getDateRangeBounds } from './dateUtils';
+import { formatDate, getCurrentDate, getDateRangeBounds, parseDateString } from './dateUtils';
 import { subDays, eachDayOfInterval, isAfter } from 'date-fns';
 
 export interface ProgressStatistics {
@@ -129,8 +129,8 @@ export const getCurrentStreak = (progressEntries: Progress[]): number => {
   let currentDate = sortedEntries[0].date;
   
   for (let i = 1; i < sortedEntries.length; i++) {
-    const expectedPrevDate = formatDate(subDays(new Date(currentDate), 1));
-    
+    const expectedPrevDate = formatDate(subDays(parseDateString(currentDate), 1));
+
     if (sortedEntries[i].date === expectedPrevDate) {
       streak++;
       currentDate = sortedEntries[i].date;

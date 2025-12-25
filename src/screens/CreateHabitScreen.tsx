@@ -184,12 +184,7 @@ export const CreateHabitScreen: React.FC = () => {
         {/* Icon Selection */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Icon</Text>
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.iconScroll}
-            contentContainerStyle={styles.iconScrollContent}
-          >
+          <View style={styles.iconGrid}>
             {HABIT_ICONS.map((icon) => (
               <TouchableOpacity
                 key={icon.name}
@@ -207,7 +202,7 @@ export const CreateHabitScreen: React.FC = () => {
                 />
               </TouchableOpacity>
             ))}
-          </ScrollView>
+          </View>
         </View>
         
         {/* Tracking Type */}
@@ -387,13 +382,10 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.textPrimary,
   },
-  iconScroll: {
-    marginHorizontal: -16,
-  },
-  iconScrollContent: {
-    paddingHorizontal: 16,
-    gap: 8,
+  iconGrid: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 8,
   },
   iconButton: {
     width: 48,

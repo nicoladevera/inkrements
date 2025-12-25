@@ -87,7 +87,6 @@ export default function App() {
             component={HomeScreen}
             options={{
               title: 'Inkrements',
-              headerLargeTitle: true,
             }}
           />
           <Stack.Screen
