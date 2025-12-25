@@ -72,10 +72,19 @@ export const CreateHabitScreen: React.FC = () => {
     }
   };
 
-  // Set header title
+  // Set header title and close button
   useEffect(() => {
     navigation.setOptions({
       title: isEditing ? 'Edit Habit' : 'Create Habit',
+      headerLeft: () => (
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.closeButton}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <MaterialCommunityIcons name="close" size={24} color={Colors.textPrimary} />
+        </TouchableOpacity>
+      ),
     });
   }, [navigation, isEditing]);
 
@@ -514,5 +523,8 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.bodyLarge,
     fontWeight: Typography.fontWeight.semibold,
     color: Colors.textOnGradient,
+  },
+  closeButton: {
+    paddingRight: Spacing.md,
   },
 });
