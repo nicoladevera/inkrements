@@ -76,6 +76,10 @@ export const WARM_COLOR_OPTIONS = [
   { value: '#F5A67A', label: 'Warm Peach' },
   { value: '#E8D5F0', label: 'Lavender' },
   { value: '#D4C5E8', label: 'Purple' },
+  { value: '#B8A5D8', label: 'Deep Purple' },
+  { value: '#C5E0F5', label: 'Soft Blue' },
+  { value: '#9BC6E8', label: 'Sky Blue' },
+  { value: '#74ADD6', label: 'Steel Blue' },
 ] as const;
 
 // Keep old name for backwards compatibility during transition

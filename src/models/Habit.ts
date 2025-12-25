@@ -40,16 +40,16 @@ export interface UpdateHabitInput {
   displayOrder?: number;
 }
 
-// Default levels for level-based habits (grayscale)
+// Default levels for level-based habits (warm peach tones)
 export const DEFAULT_LEVELS: HabitLevel[] = [
-  { name: 'Light', colorValue: '#CCCCCC' },
-  { name: 'Medium', colorValue: '#888888' },
-  { name: 'Intense', colorValue: '#444444' },
+  { name: 'Light', colorValue: '#FFD4B8' },   // Light Peach
+  { name: 'Medium', colorValue: '#FFB88C' },  // Coral
+  { name: 'Intense', colorValue: '#F5A67A' }, // Warm Peach
 ];
 
 // Default level for binary habits
 export const BINARY_LEVEL: HabitLevel = {
   name: 'Completed',
-  colorValue: '#888888',  // Medium gray for binary completion
+  colorValue: '#F5A67A',  // Warm Peach for binary completion
 };
 
