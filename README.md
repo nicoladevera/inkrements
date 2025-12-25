@@ -1,8 +1,8 @@
-# Inkrements 🌱
+# Inkrements
 
 A personal habit-tracking application inspired by GitHub's tile-based contribution graph. **Inkrements** combines "increments" (gradual progress) and "ink" (the act of jotting things down) to help you visualize and maintain consistency in your daily habits.
 
-![Grayscale Wireframe Version](https://img.shields.io/badge/version-1.0-gray?style=flat-square)
+![Modern Wellness Design](https://img.shields.io/badge/version-2.0-peach?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-lightgray?style=flat-square)
 ![React Native](https://img.shields.io/badge/React%20Native-Expo-blue?style=flat-square)
 
@@ -13,16 +13,18 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 - **Two tracking modes**: Binary (done/not done) or Level-based (varying intensities)
 - **Organized list view** to manage all your habits
 - **Edit and delete** habits with confirmation prompts
+- **9 warm color options** for level customization (peach, coral, lavender, purple, blue tones)
 
 ### Progress Tracking
 - **GitHub-style tile grid** visualization (7 columns for days of the week)
 - **Tap to log** progress for today or backfill up to 7 days
 - **Long-press to edit** or delete existing progress entries
 - **Multiple date ranges**: View 4, 8, 12, 26, or 52 weeks of history
+- **Personalized greeting** that changes based on time of day
 
 ### Level-Based Habits
 - Define **2-3 custom intensity levels** (e.g., 15min, 30min, 60+ min)
-- Assign **grayscale shades** to distinguish levels visually
+- Assign **warm color shades** to distinguish levels visually
 - View **level legend** in detail view for quick reference
 
 ### Data & Statistics
@@ -32,7 +34,11 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 - **Data persists** across app launches and device restarts
 
 ### Design Philosophy
-- **Grayscale wireframe aesthetic** prioritizing function over form (v1)
+- **Modern wellness aesthetic** with warm peach, coral, and lavender tones
+- **Elegant serif typography** (Playfair Display) for headlines
+- **Soft shadows** replacing hard borders for depth
+- **Gradient accents** on primary actions
+- **Time-based personalization** with contextual greetings
 - Clean, spacious layouts with clear visual hierarchy
 - Responsive design optimized for mobile devices
 
@@ -46,7 +52,7 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 
 ## 📸 Screenshots
 
-*Coming soon - App is currently in wireframe/grayscale v1*
+*Coming soon - App features modern wellness design with warm color palette*
 
 ## 🚀 Getting Started
 
@@ -100,15 +106,17 @@ inkrements/
 │   │   ├── ProgressStatistics.tsx    # Completion rate display
 │   │   └── ProgressTile.tsx          # Individual day tile
 │   ├── constants/
-│   │   ├── colors.ts                 # Grayscale color palette
-│   │   └── icons.ts                  # MaterialCommunityIcons set
+│   │   ├── colors.ts                 # Warm color palette (peach/coral/lavender)
+│   │   ├── icons.ts                  # MaterialCommunityIcons set
+│   │   ├── spacing.ts                # Spacing, border radius, shadows
+│   │   └── typography.ts             # Font families and text styles
 │   ├── models/
 │   │   ├── Habit.ts                  # Habit data model
 │   │   └── Progress.ts               # Progress entry model
 │   ├── screens/
 │   │   ├── CreateHabitScreen.tsx     # Create/edit habit form
 │   │   ├── HabitDetailScreen.tsx     # Detailed habit view
-│   │   └── HomeScreen.tsx            # Main dashboard
+│   │   └── HomeScreen.tsx            # Main dashboard with greeting
 │   ├── services/
 │   │   ├── database.ts               # Database initialization
 │   │   ├── habitService.ts           # Habit CRUD operations
@@ -116,6 +124,7 @@ inkrements/
 │   └── utils/
 │       ├── colorUtils.ts             # Color utility functions
 │       ├── dateUtils.ts              # Date manipulation (date-fns)
+│       ├── greetingUtils.ts          # Time-based greeting logic
 │       └── statisticsUtils.ts        # Statistics calculations
 ├── tasks/                            # Project planning documents
 │   ├── prd-inkrements-habit-tracker.md
@@ -125,7 +134,7 @@ inkrements/
 
 ## 🛠️ Tech Stack
 
-- **Framework**: React Native (Expo)
+- **Framework**: React Native (Expo SDK 54)
 - **Language**: TypeScript
 - **Navigation**: React Navigation (Native Stack)
 - **Database**:
@@ -133,11 +142,13 @@ inkrements/
   - Web: @react-native-async-storage/async-storage
 - **Date Handling**: date-fns
 - **Icons**: @expo/vector-icons (MaterialCommunityIcons)
+- **Fonts**: @expo-google-fonts/playfair-display, expo-font
+- **Gradients**: expo-linear-gradient
 - **UI Components**: React Native core components (FlatList, ScrollView, etc.)
 
 ## 📋 Development Roadmap
 
-### v1.0 (Current) - Grayscale Wireframe
+### v1.0 (Completed) - Grayscale Wireframe
 - ✅ Core habit tracking functionality
 - ✅ Binary and level-based tracking
 - ✅ Progress grid visualization
@@ -145,15 +156,22 @@ inkrements/
 - ✅ Grayscale UI
 - ✅ Expo Go compatible (no custom native modules)
 
-### v2.0 (Planned)
+### v2.0 (Planned) - Modern Wellness Design ✨
+- ✅ Warm color palette (peach, coral, lavender, blue)
+- ✅ Serif typography (Playfair Display)
+- ✅ Soft shadows and rounded corners
+- ✅ Gradient buttons and FAB
+- ✅ Time-based personalized greeting
+- ✅ Footer branding with tagline
+- ✅ 9 color options for habit levels
+- ✅ Enhanced visual hierarchy
 - [ ] Drag-and-drop habit reordering (requires custom dev client)
-- [ ] Color customization for habits
-- [ ] Habit archiving
-- [ ] Enhanced statistics (streaks, trends)
-- [ ] Export functionality (CSV/JSON)
 - [ ] Widget support (iOS/Android)
 
 ### v3.0 (Future)
+- [ ] Habit archiving
+- [ ] Enhanced statistics (streaks, trends)
+- [ ] Export functionality (CSV/JSON)
 - [ ] Optional cloud backup/sync
 - [ ] Reminder notifications
 - [ ] Habit templates
@@ -169,6 +187,7 @@ This is currently a personal project, but suggestions and feedback are welcome! 
 - [Mobile Testing Guide](MOBILE_TESTING.md) - Testing on devices, simulators, and troubleshooting
 - [Product Requirements Document (PRD)](tasks/prd-inkrements-habit-tracker.md)
 - [Task List](tasks/tasks-inkrements-habit-tracker.md)
+- [Redesign Plan](REDESIGN_PLAN.md) - Complete visual redesign implementation guide
 
 ## 🔧 Troubleshooting
 
@@ -210,9 +229,11 @@ This project is for personal use. All rights reserved.
 
 - Inspired by GitHub's contribution graph
 - Icons from MaterialCommunityIcons
+- Fonts from Google Fonts (Playfair Display)
 - Built with Expo and React Native
 
 ---
 
 **Built with ❤️ for better habits, one increment at a time.**
 
+*Small steps, big changes.*
