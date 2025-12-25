@@ -128,13 +128,12 @@ inkrements/
 - **Framework**: React Native (Expo)
 - **Language**: TypeScript
 - **Navigation**: React Navigation (Native Stack)
-- **Database**: 
+- **Database**:
   - Mobile: expo-sqlite (SQLite)
   - Web: @react-native-async-storage/async-storage
 - **Date Handling**: date-fns
 - **Icons**: @expo/vector-icons (MaterialCommunityIcons)
 - **UI Components**: React Native core components (FlatList, ScrollView, etc.)
-- **Gestures**: react-native-gesture-handler (for navigation)
 
 ## 📋 Development Roadmap
 

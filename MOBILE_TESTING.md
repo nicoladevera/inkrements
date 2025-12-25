@@ -473,9 +473,11 @@ open -a Simulator
 **Inkrements App Configuration:**
 - **Expo SDK**: 54
 - **React Native**: 0.81.5
-- **Reanimated**: ~4.1.1 (must match Expo Go's native version)
-- **Gesture Handler**: ~2.28.0 (must match Expo Go)
-- **Screens**: ~4.16.0 (must match Expo Go)
+- **Navigation**: @react-navigation/native-stack (no animations dependencies needed)
+- **Screens**: ~4.16.0
+
+**Design Decision:**
+The app intentionally avoids animation libraries (react-native-reanimated, react-native-gesture-handler) to maintain 100% Expo Go compatibility and simplicity. Navigation uses the native stack navigator which doesn't require these dependencies.
 
 **Known Incompatibilities with Expo Go:**
 - ❌ `react-native-draggable-flatlist` v4.x (requires Worklets 0.7.x, Expo Go has 0.5.x)
@@ -483,10 +485,9 @@ open -a Simulator
 
 **Working Features in Expo Go:**
 - ✅ SQLite database (expo-sqlite)
-- ✅ Navigation (React Navigation)
-- ✅ Basic animations (Reanimated 4.1.x)
-- ✅ Touch gestures (Gesture Handler 2.28.x)
+- ✅ Navigation (React Navigation Native Stack)
 - ✅ All standard React Native components
+- ✅ Touch interactions via standard TouchableOpacity/Pressable
 
 ---
 
