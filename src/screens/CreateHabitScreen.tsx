@@ -39,9 +39,11 @@ export const CreateHabitScreen: React.FC = () => {
 
   // Form state
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [selectedIcon, setSelectedIcon] = useState(DEFAULT_ICON.name);
   const [trackingType, setTrackingType] = useState<TrackingType>('binary');
   const [levels, setLevels] = useState<HabitLevel[]>([...DEFAULT_LEVELS]);
+  const [binaryColor, setBinaryColor] = useState(BINARY_LEVEL.colorValue);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
@@ -58,10 +60,13 @@ export const CreateHabitScreen: React.FC = () => {
       const habit = await getHabitById(habitId!);
       if (habit) {
         setName(habit.name);
+        setDescription(habit.description || '');
         setSelectedIcon(habit.icon);
         setTrackingType(habit.trackingType);
         if (habit.trackingType === 'level-based') {
           setLevels(habit.levels);
+        } else if (habit.trackingType === 'binary' && habit.levels.length > 0) {
+          setBinaryColor(habit.levels[0].colorValue);
         }
       }
     } catch (error) {
@@ -141,19 +146,23 @@ export const CreateHabitScreen: React.FC = () => {
 
     setIsSaving(true);
     try {
+      const binaryLevel = { name: 'Completed', colorValue: binaryColor };
+
       if (isEditing && habitId) {
         await updateHabit(habitId, {
           name: name.trim(),
+          description: description.trim() || undefined,
           icon: selectedIcon,
           trackingType,
-          levels: trackingType === 'binary' ? [BINARY_LEVEL] : levels,
+          levels: trackingType === 'binary' ? [binaryLevel] : levels,
         });
       } else {
         await createHabit({
           name: name.trim(),
+          description: description.trim() || undefined,
           icon: selectedIcon,
           trackingType,
-          levels: trackingType === 'binary' ? undefined : levels,
+          levels: trackingType === 'binary' ? [binaryLevel] : levels,
         });
       }
 
@@ -190,6 +199,22 @@ export const CreateHabitScreen: React.FC = () => {
             placeholder="e.g., Read for 30 minutes"
             placeholderTextColor={Colors.textTertiary}
             maxLength={50}
+          />
+        </View>
+
+        {/* Description */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Description (Optional)</Text>
+          <TextInput
+            style={[styles.textInput, styles.textInputMultiline]}
+            value={description}
+            onChangeText={setDescription}
+            placeholder="Add more details about this habit..."
+            placeholderTextColor={Colors.textTertiary}
+            maxLength={200}
+            multiline
+            numberOfLines={3}
+            textAlignVertical="top"
           />
         </View>
 
@@ -266,6 +291,36 @@ export const CreateHabitScreen: React.FC = () => {
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* Binary Color Configuration */}
+        {trackingType === 'binary' && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Completion Color</Text>
+            <View style={styles.binaryColorRow}>
+              <View
+                style={[styles.levelColorPreview, { backgroundColor: binaryColor }]}
+              />
+              <Text style={styles.binaryColorLabel}>Completed</Text>
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.colorOptionsWide}
+              >
+                {WARM_COLOR_OPTIONS.map((option) => (
+                  <TouchableOpacity
+                    key={option.value}
+                    style={[
+                      styles.colorOption,
+                      { backgroundColor: option.value },
+                      binaryColor === option.value && styles.colorOptionSelected,
+                    ]}
+                    onPress={() => setBinaryColor(option.value)}
+                  />
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        )}
 
         {/* Level Configuration (for level-based) */}
         {trackingType === 'level-based' && (
@@ -391,7 +446,7 @@ const styles = StyleSheet.create({
     letterSpacing: Typography.letterSpacing.wide,
   },
   textInput: {
-    backgroundColor: Colors.cardBackgroundAlt,
+    backgroundColor: Colors.white,
     borderWidth: 1,
     borderColor: Colors.border,
     borderRadius: BorderRadius.button,
@@ -399,6 +454,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     fontSize: Typography.fontSize.bodyLarge,
     color: Colors.textPrimary,
+  },
+  textInputMultiline: {
+    minHeight: 80,
+    paddingTop: Spacing.md,
   },
   iconGrid: {
     flexDirection: 'row',
@@ -449,6 +508,20 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.caption,
     color: Colors.textTertiary,
   },
+  binaryColorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.md,
+  },
+  binaryColorLabel: {
+    fontSize: Typography.fontSize.bodySmall,
+    fontWeight: Typography.fontWeight.medium,
+    color: Colors.textPrimary,
+    minWidth: 80,
+  },
+  colorOptionsWide: {
+    flex: 1,
+  },
   levelRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -464,7 +537,7 @@ const styles = StyleSheet.create({
   },
   levelInput: {
     flex: 1,
-    backgroundColor: Colors.cardBackgroundAlt,
+    backgroundColor: Colors.white,
     borderWidth: 1,
     borderColor: Colors.border,
     borderRadius: BorderRadius.button,

@@ -134,7 +134,7 @@ Update the file after completing each sub-task, not just after completing an ent
   - [x] 8.11 Handle error states and display appropriate error messages
 
 - [x] 9.0 Progress logging functionality
-  - [x] 9.1 Implement date validation utility to check if date is today or within last 7 days (allow logging), and prevent future dates
+  - [x] 9.1 Implement date validation utility to check if date is today or any past date (allow logging), and prevent future dates
   - [x] 9.2 Handle ProgressTile tap event to open LevelSelectorModal (for level-based) or directly log (for binary)
   - [x] 9.3 In LevelSelectorModal, display available levels for the habit with color swatches and descriptions
   - [x] 9.4 Save progress entry via progressService when level is selected or binary habit is tapped

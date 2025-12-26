@@ -59,21 +59,24 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
     return progressMap.get(formatDate(date)) || 0;
   };
 
-  // Calculate if we need to show month label for a week
-  const getMonthLabel = (weekDates: Date[]): string | null => {
+  // Calculate month label for each week row
+  const getMonthLabel = (weekDates: Date[], weekIndex: number): string | null => {
     if (!showMonthLabels) return null;
 
-    // Check if any day in this week is the first of a month
-    for (const date of weekDates) {
-      if (isFirstDayOfMonth(date) && isSunday(date)) {
-        return getShortMonth(date);
-      }
+    const sunday = weekDates[0]; // First day of the week (Sunday)
+    const currentMonth = getShortMonth(sunday);
+
+    // Always show month for the first week (most recent)
+    if (weekIndex === 0) {
+      return currentMonth;
     }
 
-    // For the first week, show the month of Sunday
-    const sunday = weekDates[0];
-    if (isFirstDayOfMonth(sunday) || weekDates === weeklyDates[weeklyDates.length - 1]) {
-      return getShortMonth(sunday);
+    // For subsequent weeks, show month if it's different from the previous week
+    const previousWeek = weeklyDates[weekIndex - 1];
+    const previousMonth = getShortMonth(previousWeek[0]);
+
+    if (currentMonth !== previousMonth) {
+      return currentMonth;
     }
 
     return null;
@@ -90,7 +93,7 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
           {DAY_LABELS.map((label, index) => (
             <View
               key={index}
-              style={[styles.dayLabel, { width: actualTileSize + 3 }]}
+              style={[styles.dayLabel, { width: actualTileSize }]}
             >
               <Text style={styles.dayLabelText}>{label}</Text>
             </View>
@@ -105,7 +108,7 @@ export const ProgressGrid: React.FC<ProgressGridProps> = memo(({
         nestedScrollEnabled
       >
         {weeklyDates.map((weekDates, weekIndex) => {
-          const monthLabel = getMonthLabel(weekDates);
+          const monthLabel = getMonthLabel(weekDates, weekIndex);
 
           return (
             <View key={weekIndex} style={styles.weekRow}>

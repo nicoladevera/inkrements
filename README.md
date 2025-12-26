@@ -17,7 +17,7 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 
 ### Progress Tracking
 - **GitHub-style tile grid** visualization (7 columns for days of the week)
-- **Tap to log** progress for today or backfill up to 7 days
+- **Tap to log** progress for today or backfill any past date
 - **Long-press to edit** or delete existing progress entries
 - **Multiple date ranges**: View 4, 8, 12, 26, or 52 weeks of history
 - **Personalized greeting** that changes based on time of day
