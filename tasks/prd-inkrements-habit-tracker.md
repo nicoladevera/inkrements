@@ -24,7 +24,7 @@ This app allows users to create custom habits, track daily progress with varying
 1. Create a new habit with a custom name, icon, and color scheme so I can personalize my tracking experience
 2. Choose whether a habit is binary (done/not done) or level-based (varying intensities) so I can track different types of activities appropriately
 3. Define up to 3 custom levels for level-based habits with associated colors/shades so I can track intensity (e.g., 15min, 30min, 60+ min reading)
-4. Mark my progress for today or backfill missed entries from the past 7 days so I can maintain accurate tracking even if I forget to log immediately
+4. Mark my progress for today or backfill missed entries from any past date so I can maintain accurate tracking even if I forget to log immediately
 5. View a tile-based grid showing my progress for a selected timeframe (4/8/12/26/52 weeks) so I can visualize my consistency patterns
 6. See all my habits in one scrollable home screen view with their individual progress grids (defaulted to last 4 weeks) so I can get a quick overview of my tracking
 7. Click into any habit to view a detailed page with extended timeframe options so I can analyze longer-term patterns
@@ -73,7 +73,7 @@ This app allows users to create custom habits, track daily progress with varying
 
 13. The system must allow users to mark progress for today's date for any habit
 
-14. The system must allow users to backfill progress for past dates up to 7 days ago
+14. The system must allow users to backfill progress for any past date
 
 15. The system must prevent users from marking progress for future dates
 

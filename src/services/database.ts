@@ -79,6 +79,7 @@ export const initializeDatabase = async (): Promise<void> => {
         CREATE TABLE IF NOT EXISTS habits (
           id TEXT PRIMARY KEY NOT NULL,
           name TEXT NOT NULL,
+          description TEXT,
           icon TEXT NOT NULL,
           tracking_type TEXT NOT NULL CHECK(tracking_type IN ('binary', 'level-based')),
           levels TEXT NOT NULL DEFAULT '[]',
@@ -87,6 +88,15 @@ export const initializeDatabase = async (): Promise<void> => {
           updated_at TEXT NOT NULL
         );
       `);
+
+      // Migration: Add description column if it doesn't exist (for existing databases)
+      try {
+        await sqliteDb.execAsync(`
+          ALTER TABLE habits ADD COLUMN description TEXT;
+        `);
+      } catch (error) {
+        // Column already exists, ignore error
+      }
       
       // Create Progress table
       await sqliteDb.execAsync(`

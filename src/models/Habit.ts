@@ -15,6 +15,7 @@ export type TrackingType = 'binary' | 'level-based';
 export interface Habit {
   id: string;
   name: string;
+  description?: string;            // Optional description for additional details
   icon: string;                    // Icon name from icon library
   trackingType: TrackingType;
   levels: HabitLevel[];            // Empty array for binary habits, 2-3 items for level-based
@@ -26,6 +27,7 @@ export interface Habit {
 // Habit creation input (without auto-generated fields)
 export interface CreateHabitInput {
   name: string;
+  description?: string;
   icon: string;
   trackingType: TrackingType;
   levels?: HabitLevel[];
@@ -34,6 +36,7 @@ export interface CreateHabitInput {
 // Habit update input (partial, without id)
 export interface UpdateHabitInput {
   name?: string;
+  description?: string;
   icon?: string;
   trackingType?: TrackingType;
   levels?: HabitLevel[];

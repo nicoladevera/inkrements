@@ -227,7 +227,12 @@ export const HabitDetailScreen: React.FC = () => {
             color={Colors.textPrimary}
           />
         </View>
-        <Text style={styles.habitName}>{habit.name}</Text>
+        <View style={styles.habitInfo}>
+          <Text style={styles.habitName}>{habit.name}</Text>
+          {habit.description && (
+            <Text style={styles.habitDescription}>{habit.description}</Text>
+          )}
+        </View>
       </View>
 
       {/* Statistics Card */}
@@ -301,7 +306,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     marginBottom: Spacing.lg,
   },
   iconContainer: {
@@ -313,11 +318,19 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: Spacing.lg,
   },
-  habitName: {
+  habitInfo: {
     flex: 1,
+  },
+  habitName: {
     fontFamily: Typography.fontFamily.serif,
     fontSize: Typography.fontSize.headline,
     color: Colors.textPrimary,
+    marginBottom: Spacing.xs,
+  },
+  habitDescription: {
+    fontSize: Typography.fontSize.bodySmall,
+    color: Colors.textSecondary,
+    lineHeight: 20,
   },
   sectionCard: {
     backgroundColor: Colors.cardBackground,

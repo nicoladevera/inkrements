@@ -62,15 +62,14 @@ export const isToday = (date: Date | string): boolean => {
 };
 
 /**
- * Check if a date is within the allowed logging range (today or past 7 days)
+ * Check if a date is within the allowed logging range (today or any past date)
  */
 export const isWithinLoggingRange = (date: Date | string): boolean => {
   const d = typeof date === 'string' ? parseISO(date) : date;
   const today = getCurrentDate();
-  const sevenDaysAgo = subDays(today, 7);
-  
-  // Date must be <= today and >= 7 days ago
-  return !isAfter(startOfDay(d), today) && !isBefore(startOfDay(d), sevenDaysAgo);
+
+  // Date must be <= today (not in the future)
+  return !isAfter(startOfDay(d), today);
 };
 
 /**

@@ -23,6 +23,7 @@ import {
 interface HabitRow {
   id: string;
   name: string;
+  description?: string;
   icon: string;
   tracking_type: string;
   levels: string;
@@ -37,6 +38,7 @@ interface HabitRow {
 const rowToHabit = (row: HabitRow): Habit => ({
   id: row.id,
   name: row.name,
+  description: row.description,
   icon: row.icon,
   trackingType: row.tracking_type as TrackingType,
   levels: JSON.parse(row.levels) as HabitLevel[],
@@ -53,9 +55,9 @@ export const createHabit = async (input: CreateHabitInput): Promise<Habit> => {
   const now = getCurrentTimestamp();
   
   // Set default levels based on tracking type
-  const levels = input.trackingType === 'binary' 
+  const levels = input.levels || (input.trackingType === 'binary'
     ? [BINARY_LEVEL]
-    : (input.levels || []);
+    : []);
   
   if (isWebPlatform()) {
     const storage = getWebStorage();
@@ -72,6 +74,7 @@ export const createHabit = async (input: CreateHabitInput): Promise<Habit> => {
     const habitRow: HabitRow = {
       id,
       name: input.name,
+      description: input.description,
       icon: input.icon,
       tracking_type: input.trackingType,
       levels: JSON.stringify(levels),
@@ -79,13 +82,14 @@ export const createHabit = async (input: CreateHabitInput): Promise<Habit> => {
       created_at: now,
       updated_at: now,
     };
-    
+
     storage.habits.set(id, habitRow);
     await persistData();
-    
+
     return {
       id,
       name: input.name,
+      description: input.description,
       icon: input.icon,
       trackingType: input.trackingType,
       levels,
@@ -105,10 +109,11 @@ export const createHabit = async (input: CreateHabitInput): Promise<Habit> => {
   const displayOrder = (result?.maxOrder ?? -1) + 1;
   
   await db.runAsync(
-    `INSERT INTO habits (id, name, icon, tracking_type, levels, display_order, created_at, updated_at)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+    `INSERT INTO habits (id, name, description, icon, tracking_type, levels, display_order, created_at, updated_at)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     id,
     input.name,
+    input.description || null,
     input.icon,
     input.trackingType,
     JSON.stringify(levels),
@@ -116,10 +121,11 @@ export const createHabit = async (input: CreateHabitInput): Promise<Habit> => {
     now,
     now
   );
-  
+
   return {
     id,
     name: input.name,
+    description: input.description,
     icon: input.icon,
     trackingType: input.trackingType,
     levels,
@@ -193,6 +199,7 @@ export const updateHabit = async (
     const updatedRow: HabitRow = {
       ...row,
       name: input.name ?? row.name,
+      description: input.description !== undefined ? input.description : row.description,
       icon: input.icon ?? row.icon,
       tracking_type: input.trackingType ?? row.tracking_type,
       levels: input.levels ? JSON.stringify(input.levels) : row.levels,
@@ -217,7 +224,12 @@ export const updateHabit = async (
     updates.push('name = ?');
     values.push(input.name);
   }
-  
+
+  if (input.description !== undefined) {
+    updates.push('description = ?');
+    values.push(input.description || null);
+  }
+
   if (input.icon !== undefined) {
     updates.push('icon = ?');
     values.push(input.icon);

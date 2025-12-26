@@ -12,39 +12,39 @@ export interface HabitIcon {
 
 // Curated list of most common habit icons
 export const HABIT_ICONS: HabitIcon[] = [
-  // Exercise & Movement (consolidated)
+  // Exercise & Movement
   { name: 'run', label: 'Exercise' },
-  { name: 'yoga', label: 'Yoga' },
+  { name: 'walk', label: 'Walking' },
   { name: 'dumbbell', label: 'Strength' },
   { name: 'bike', label: 'Cycling' },
 
   // Health & Wellness
-  { name: 'water', label: 'Hydration' },
+  { name: 'water-outline', label: 'Hydration' },
   { name: 'food-apple', label: 'Nutrition' },
   { name: 'sleep', label: 'Sleep' },
   { name: 'meditation', label: 'Meditation' },
   { name: 'pill', label: 'Medication' },
+  { name: 'broom', label: 'Cleaning' },
 
   // Learning & Development
   { name: 'book-open-page-variant', label: 'Reading' },
   { name: 'pencil', label: 'Writing' },
-  { name: 'brain', label: 'Study' },
-  { name: 'language-python', label: 'Coding' },
+  { name: 'laptop', label: 'Coding' },
 
   // Productivity & Goals
   { name: 'clipboard-check', label: 'Tasks' },
   { name: 'briefcase', label: 'Work' },
-  { name: 'target', label: 'Goals' },
+  { name: 'cash', label: 'Finance' },
 
   // Lifestyle & Hobbies
-  { name: 'notebook', label: 'Journal' },
+  { name: 'sprout', label: 'Nature' },
   { name: 'palette', label: 'Creative' },
   { name: 'music', label: 'Music' },
   { name: 'camera', label: 'Photography' },
-  { name: 'chef-hat', label: 'Cooking' },
+  { name: 'pot-steam', label: 'Cooking' },
 
   // Social & Mindfulness
-  { name: 'account-group', label: 'Social' },
+  { name: 'heart', label: 'Self-care' },
   { name: 'emoticon-happy', label: 'Mood' },
   { name: 'check-circle', label: 'General' },
 ];
