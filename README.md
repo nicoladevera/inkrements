@@ -52,7 +52,8 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 
 ## 📸 Screenshots
 
-*Coming soon - App features modern wellness design with warm color palette*
+![Inkrements App Overview](assets/app-overview.png)
+
 
 ## 🚀 Getting Started
 
