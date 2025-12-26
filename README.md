@@ -2,7 +2,7 @@
 
 A personal habit-tracking application inspired by GitHub's tile-based contribution graph. **Inkrements** combines "increments" (gradual progress) and "ink" (the act of jotting things down) to help you visualize and maintain consistency in your daily habits.
 
-![Modern Wellness Design](https://img.shields.io/badge/version-1.0.0-peach?style=flat-square)
+![Modern Wellness Design](https://img.shields.io/badge/version-2.0-peach?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-lightgray?style=flat-square)
 ![React Native](https://img.shields.io/badge/React%20Native-Expo-blue?style=flat-square)
 
@@ -185,7 +185,7 @@ inkrements/
 - ✅ Grayscale UI
 - ✅ Expo Go compatible (no custom native modules)
 
-### v2.0 (Planned) - Modern Wellness Design ✨
+### v2.0 (Current) - Modern Wellness Design ✨
 - ✅ Warm color palette (peach, coral, lavender, blue)
 - ✅ Serif typography (Playfair Display)
 - ✅ Soft shadows and rounded corners
