@@ -200,7 +200,7 @@ export const HomeScreen: React.FC = () => {
   const renderFooter = useCallback(() => (
     <View style={styles.footerContainer}>
       <Text style={styles.brandName}>Inkrements</Text>
-      <Text style={styles.tagline}>Small steps, big changes.</Text>
+      <Text style={styles.tagline}>Ink your progress,{'\n'}one increment at a time.</Text>
     </View>
   ), []);
 
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
   listContent: {
     padding: Spacing.lg,
     paddingTop: Spacing.md,
-    paddingBottom: 100,
+    paddingBottom: 80,
   },
   footerContainer: {
     alignItems: 'center',
@@ -315,6 +315,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: Typography.fontSize.bodySmall,
     color: Colors.textTertiary,
+    textAlign: 'center',
   },
   fab: {
     position: 'absolute',
