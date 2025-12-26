@@ -192,6 +192,46 @@ For testing with packages incompatible with Expo Go or closer to production buil
 
 ---
 
+## Managing Test Data & Versions
+
+When testing new features (like empty states) without losing your existing test data (habits, logs), use one of these strategies to keep environments separate.
+
+### 1. The Quick Fix: Use a Different Simulator
+The easiest way to get a "fresh" device without wiping your data is to use a different simulator device. Each simulator maintains its own isolated storage.
+
+**How to do it:**
+1. Open Simulator app
+2. **File > Open Simulator** > Choose a different device (e.g., if using iPhone 15, open iPhone SE)
+3. In your terminal, press `shift + i` to select the specific simulator to run on
+
+**Best for:**
+- Quick checks of empty states
+- One-off testing
+- Validating layout on different screen sizes
+
+### 2. The Robust Solution: App Variants (Recommended)
+For a long-term professional workflow, configure "App Variants" (Development, Preview, Production). This allows you to have **Inkrements** (Production/Test) and **Inkrements Dev** (Development) installed on the *same* device side-by-side.
+
+**How it works:**
+- Uses a dynamic `app.config.ts` instead of static `app.json`
+- Changes the `bundleIdentifier` based on an environment variable (e.g., `APP_VARIANT=development`)
+- Each variant has its own isolated sandbox and storage
+
+**Setup Overview:**
+1. Convert `app.json` to `app.config.ts`
+2. Add logic to switch bundle ID (e.g., suffix with `.dev`)
+3. Update `package.json` scripts to include the variant flag:
+   ```bash
+   "start:dev": "APP_VARIANT=development npx expo start"
+   ```
+
+**Best for:**
+- Long-term development
+- Keeping "real" usage data separate from "testing" data on your physical phone
+- Testing migration paths
+
+---
+
 ## Troubleshooting
 
 ### Worklets Version Mismatch Error

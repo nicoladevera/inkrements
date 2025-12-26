@@ -2,7 +2,7 @@
 
 A personal habit-tracking application inspired by GitHub's tile-based contribution graph. **Inkrements** combines "increments" (gradual progress) and "ink" (the act of jotting things down) to help you visualize and maintain consistency in your daily habits.
 
-![Modern Wellness Design](https://img.shields.io/badge/version-2.0-peach?style=flat-square)
+![Modern Wellness Design](https://img.shields.io/badge/version-1.0.0-peach?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-lightgray?style=flat-square)
 ![React Native](https://img.shields.io/badge/React%20Native-Expo-blue?style=flat-square)
 
@@ -66,9 +66,11 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/inkrements.git
+   git clone https://github.com/your-username/inkrements.git
    cd inkrements
    ```
+
+   > **Note**: If you fork this project, update the `bundleIdentifier` in `app.json` (iOS) and `package` in `app.json` (Android) to use your own identifier.
 
 2. **Install dependencies**
    ```bash
@@ -85,6 +87,24 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
    - **Android**: Press `a` in the terminal or scan QR code with Expo Go
    - **Web**: Press `w` in the terminal or visit `http://localhost:8081`
 
+### Building for Production
+
+This project is configured with EAS Build for creating production-ready builds:
+
+```bash
+# Install EAS CLI globally
+npm install -g eas-cli
+
+# Login to your Expo account
+eas login
+
+# Build for iOS or Android
+eas build --platform ios
+eas build --platform android
+```
+
+For detailed deployment instructions, see the [Deployment Guide](docs/DEPLOYMENT.md).
+
 ## 🏗️ Project Structure
 
 ```
@@ -92,9 +112,18 @@ inkrements/
 ├── index.ts                          # Entry point (registers root component)
 ├── App.tsx                           # Main app component with navigation
 ├── app.json                          # Expo app configuration
+├── eas.json                          # EAS Build configuration
 ├── package.json                      # NPM dependencies and scripts
 ├── tsconfig.json                     # TypeScript configuration
-├── assets/                           # Static assets (icons, splash images)
+├── assets/                           # Static assets (app icons, splash screens, favicon)
+│   ├── icon.png                      # App icon
+│   ├── adaptive-icon.png             # Android adaptive icon
+│   ├── splash-icon.png               # Splash screen icon
+│   └── favicon.png                   # Web favicon
+├── docs/                             # Documentation files
+│   ├── DEPLOYMENT.md                 # EAS Build and deployment guide
+│   ├── MOBILE_TESTING.md             # Mobile testing guide
+│   └── REDESIGN_PLAN.md              # Design implementation plan
 ├── src/
 │   ├── components/                   # Reusable UI components
 │   │   ├── DateRangeSelector.tsx     # Date range dropdown (4-52 weeks)
@@ -184,15 +213,16 @@ This is currently a personal project, but suggestions and feedback are welcome! 
 
 ## 📝 Documentation
 
-- [Mobile Testing Guide](MOBILE_TESTING.md) - Testing on devices, simulators, and troubleshooting
+- [Mobile Testing Guide](docs/MOBILE_TESTING.md) - Testing on devices, simulators, and troubleshooting
+- [Deployment Guide](docs/DEPLOYMENT.md) - EAS Build configuration and deployment instructions
+- [Redesign Plan](docs/REDESIGN_PLAN.md) - Complete visual redesign implementation guide
 - [Product Requirements Document (PRD)](tasks/prd-inkrements-habit-tracker.md)
 - [Task List](tasks/tasks-inkrements-habit-tracker.md)
-- [Redesign Plan](REDESIGN_PLAN.md) - Complete visual redesign implementation guide
 
 ## 🔧 Troubleshooting
 
 ### Package compatibility issues
-See the [Mobile Testing Guide](MOBILE_TESTING.md#worklets-version-mismatch-error) for detailed troubleshooting steps, especially for:
+See the [Mobile Testing Guide](docs/MOBILE_TESTING.md#worklets-version-mismatch-error) for detailed troubleshooting steps, especially for:
 - Worklets version mismatch errors
 - Native module compatibility with Expo Go
 - When to use custom development client vs Expo Go
