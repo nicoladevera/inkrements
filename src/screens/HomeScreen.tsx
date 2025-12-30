@@ -20,7 +20,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 
 import { Colors } from '../constants/colors';
 import { Typography } from '../constants/typography';
-import { Shadows, Spacing } from '../constants/spacing';
+import { Shadows, Spacing, BorderRadius } from '../constants/spacing';
 import { Habit } from '../models/Habit';
 import { Progress } from '../models/Progress';
 import { HabitCard } from '../components/HabitCard';
@@ -107,6 +107,11 @@ export const HomeScreen: React.FC = () => {
     navigation.navigate('CreateHabit', {});
   }, [navigation]);
 
+  // Navigate to settings
+  const handleSettings = useCallback(() => {
+    navigation.navigate('Settings');
+  }, [navigation]);
+
   // Handle tile press (log progress)
   const handleTilePress = useCallback(async (habitId: string, date: string) => {
     const habitData = habitsWithProgress.find(h => h.habit.id === habitId);
@@ -191,16 +196,27 @@ export const HomeScreen: React.FC = () => {
   // Render greeting header
   const renderHeader = useCallback(() => (
     <View style={styles.greetingContainer}>
-      <Text style={styles.greetingText}>{greeting}</Text>
-      <Text style={styles.dateText}>{formattedDate}</Text>
+      <View style={styles.headerRow}>
+        <View>
+          <Text style={styles.greetingText}>{greeting}</Text>
+          <Text style={styles.dateText}>{formattedDate}</Text>
+        </View>
+        <TouchableOpacity
+          style={styles.settingsButton}
+          onPress={handleSettings}
+          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+        >
+          <MaterialCommunityIcons name="cog-outline" size={24} color={Colors.textSecondary} />
+        </TouchableOpacity>
+      </View>
     </View>
-  ), [greeting, formattedDate]);
+  ), [greeting, formattedDate, handleSettings]);
 
   // Render footer with branding
   const renderFooter = useCallback(() => (
     <View style={styles.footerContainer}>
       <Text style={styles.brandName}>Inkrements</Text>
-      <Text style={styles.tagline}>Ink your progress,{'\n'}one increment at a time.</Text>
+      <Text style={styles.tagline}>Ink your progress, one increment at a time.</Text>
     </View>
   ), []);
 
@@ -286,6 +302,14 @@ const styles = StyleSheet.create({
   greetingContainer: {
     marginBottom: Spacing.xl,
   },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+  },
+  settingsButton: {
+    padding: Spacing.xs,
+  },
   greetingText: {
     fontFamily: Typography.fontFamily.serif,
     fontSize: Typography.fontSize.headline,
@@ -316,6 +340,7 @@ const styles = StyleSheet.create({
     fontSize: Typography.fontSize.bodySmall,
     color: Colors.textTertiary,
     textAlign: 'center',
+    fontStyle: 'italic',
   },
   fab: {
     position: 'absolute',
