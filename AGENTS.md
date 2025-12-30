@@ -29,6 +29,7 @@ A comprehensive guide for AI agents and developers working with the Inkrements h
 - **Fonts**: @expo-google-fonts/playfair-display ^0.4.2
 - **Gradients**: expo-linear-gradient ~15.0.8
 - **Font Loading**: expo-font ~14.0.10
+- **File Handling**: expo-file-system (legacy), expo-sharing ~14.0.8
 
 ### Utilities
 - **Date Handling**: date-fns ^4.1.0
@@ -107,10 +108,13 @@ inkrements/
 │   ├── screens/                      # Container components (manage state)
 │   │   ├── CreateHabitScreen.tsx     # Create/edit habit form (modal)
 │   │   ├── HabitDetailScreen.tsx     # Habit detail view with full grid
-│   │   └── HomeScreen.tsx            # Main dashboard with habit list
+│   │   ├── HabitDetailScreen.tsx     # Habit detail view with full grid
+│   │   ├── HomeScreen.tsx            # Main dashboard with habit list
+│   │   └── SettingsScreen.tsx        # App settings and data export
 │   │
 │   ├── services/                     # Business logic & data access (CRITICAL)
 │   │   ├── database.ts               # Platform-agnostic DB initialization
+│   │   ├── exportService.ts          # Data export functionality (JSON/CSV)
 │   │   ├── habitService.ts           # Habit CRUD operations
 │   │   └── progressService.ts        # Progress CRUD operations
 │   │

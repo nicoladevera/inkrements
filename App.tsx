@@ -15,13 +15,17 @@ import { initializeDatabase } from './src/services/database';
 import { HomeScreen } from './src/screens/HomeScreen';
 import { HabitDetailScreen } from './src/screens/HabitDetailScreen';
 import { CreateHabitScreen } from './src/screens/CreateHabitScreen';
+import { SettingsScreen } from './src/screens/SettingsScreen';
+
 
 // Navigation types
 export type RootStackParamList = {
   Home: undefined;
   HabitDetail: { habitId: string };
   CreateHabit: { habitId?: string };
+  Settings: undefined;
 };
+
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -113,6 +117,15 @@ export default function App() {
               presentation: 'modal',
             }}
           />
+          <Stack.Screen
+            name="Settings"
+            component={SettingsScreen}
+            options={{
+              title: 'Settings',
+              presentation: 'card',
+            }}
+          />
+
         </Stack.Navigator>
       </NavigationContainer>
     </View>

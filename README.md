@@ -32,6 +32,8 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
 - **Local-first storage**: SQLite on mobile, AsyncStorage on web
 - **100% offline capable** - no internet required
 - **Data persists** across app launches and device restarts
+- **Data Export**: Export your complete history to JSON or CSV formats
+
 
 ### Design Philosophy
 - **Modern wellness aesthetic** with warm peach, coral, and lavender tones
@@ -146,9 +148,12 @@ inkrements/
 │   ├── screens/
 │   │   ├── CreateHabitScreen.tsx     # Create/edit habit form
 │   │   ├── HabitDetailScreen.tsx     # Detailed habit view
-│   │   └── HomeScreen.tsx            # Main dashboard with greeting
+│   │   ├── HabitDetailScreen.tsx     # Detailed habit view
+│   │   ├── HomeScreen.tsx            # Main dashboard with greeting
+│   │   └── SettingsScreen.tsx        # App settings and data export
 │   ├── services/
 │   │   ├── database.ts               # Database initialization
+│   │   ├── exportService.ts          # Data export functionality (JSON/CSV)
 │   │   ├── habitService.ts           # Habit CRUD operations
 │   │   └── progressService.ts        # Progress CRUD operations
 │   └── utils/
@@ -174,6 +179,7 @@ inkrements/
 - **Icons**: @expo/vector-icons (MaterialCommunityIcons)
 - **Fonts**: @expo-google-fonts/playfair-display, expo-font
 - **Gradients**: expo-linear-gradient
+- **File Handling**: expo-file-system, expo-sharing
 - **UI Components**: React Native core components (FlatList, ScrollView, etc.)
 
 ## 📋 Development Roadmap
@@ -195,7 +201,7 @@ inkrements/
 - ✅ Footer branding with tagline
 - ✅ 9 color options for habit levels
 - ✅ Enhanced visual hierarchy
-- [ ] Export functionality (CSV/JSON)
+- ✅ Export functionality (CSV/JSON)
 
 ### v3.0 (Future)
 - [ ] Drag-and-drop habit reordering (requires custom dev client)

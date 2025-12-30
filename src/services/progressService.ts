@@ -420,5 +420,28 @@ export const getProgressForHabits = async (
     progressMap.get(progress.habitId)?.push(progress);
   }
   
+  
   return progressMap;
+};
+
+/**
+ * Get ALL progress entries (for export/backup)
+ */
+export const getAllProgress = async (): Promise<Progress[]> => {
+  if (isWebPlatform()) {
+    const storage = getWebStorage();
+    const results: Progress[] = [];
+    
+    storage.progress.forEach((row: ProgressRow) => {
+      results.push(rowToProgress(row));
+    });
+    
+    return results.sort((a, b) => b.date.localeCompare(a.date));
+  }
+  
+  const db = await getDatabase();
+  const rows = await db.getAllAsync<ProgressRow>(
+    'SELECT * FROM progress ORDER BY date DESC'
+  );
+  return rows.map(rowToProgress);
 };
