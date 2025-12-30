@@ -195,13 +195,13 @@ inkrements/
 - ✅ Footer branding with tagline
 - ✅ 9 color options for habit levels
 - ✅ Enhanced visual hierarchy
-- [ ] Drag-and-drop habit reordering (requires custom dev client)
-- [ ] Widget support (iOS/Android)
+- [ ] Export functionality (CSV/JSON)
 
 ### v3.0 (Future)
+- [ ] Drag-and-drop habit reordering (requires custom dev client)
+- [ ] Widget support (iOS/Android)
 - [ ] Habit archiving
 - [ ] Enhanced statistics (streaks, trends)
-- [ ] Export functionality (CSV/JSON)
 - [ ] Optional cloud backup/sync
 - [ ] Reminder notifications
 - [ ] Habit templates
