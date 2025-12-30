@@ -55,3 +55,6 @@ coverage/
 
 # Cache
 .cache/
+
+# Code Guro
+code-guro-output/
