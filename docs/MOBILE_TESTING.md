@@ -12,11 +12,15 @@ Browser responsive mode doesn't accurately represent the mobile experience becau
 - Real performance characteristics
 - Mobile-specific font rendering
 
+> **Note:** This guide covers testing during development. When you're ready to deploy a standalone app for daily use (without running `npx expo start`), see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## Testing Options
 
 ### 1. Expo Go on Physical Device (Recommended)
 
-The fastest and most accurate way to test. Gives you the real mobile experience with instant hot reload.
+The fastest and most accurate way to test during development. Gives you the real mobile experience with instant hot reload.
+
+> **Important:** Expo Go is a development tool, not a standalone app. Your computer must be running `npx expo start` for the app to work. For installing a permanent standalone app, see [DEPLOYMENT.md](./DEPLOYMENT.md).
 
 #### Setup
 
@@ -46,6 +50,35 @@ The fastest and most accurate way to test. Gives you the real mobile experience 
 - Make sure your phone and computer are on the same Wi-Fi network
 - Shake the device to open the developer menu
 - Pull down to refresh/reload the app
+
+#### Sharing with Remote Testers (Tunnel Mode)
+
+Want to share your development build with testers who aren't on your Wi-Fi network? Use tunnel mode.
+
+**Start with tunnel:**
+```bash
+npx expo start --tunnel
+```
+
+**How it works:**
+- Creates a public URL through Expo's tunneling service
+- Anyone with the QR code can connect from anywhere (different Wi-Fi, city, country)
+- Their Expo Go app loads your code through the internet tunnel
+
+**Connection Modes Comparison:**
+
+| Mode | Command | Access | Speed | Use Case |
+|------|---------|--------|-------|----------|
+| LAN (default) | `npx expo start` | Same Wi-Fi only | Fast | Solo development |
+| Tunnel | `npx expo start --tunnel` | Anywhere (internet) | Slower | Remote testers |
+| Localhost | `npx expo start --localhost` | Your computer only | Fastest | Simulators only |
+
+**Important:** Tunnel mode is still development mode - your computer must be running the dev server. For standalone apps that work without your computer, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+**Tips for remote testing sessions:**
+- Share the QR code screenshot via messaging apps
+- Warn testers about potential latency (internet vs local network)
+- Keep terminal open - closing it disconnects all testers
 
 ---
 

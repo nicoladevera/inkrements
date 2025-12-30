@@ -4,6 +4,8 @@ This guide covers realistic options for installing the Inkrements app on your iP
 
 **Important:** Apple's restrictions make iOS deployment challenging for personal projects. All options have significant trade-offs.
 
+> **For Development:** If you're still building and testing features, see [MOBILE_TESTING.md](./MOBILE_TESTING.md) for testing with Expo Go, simulators, and emulators.
+
 ---
 
 ## Overview
