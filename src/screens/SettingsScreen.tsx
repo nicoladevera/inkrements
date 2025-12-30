@@ -42,10 +42,7 @@ export const SettingsScreen: React.FC = () => {
     return (
         <SafeAreaView style={styles.container}>
             <ScrollView contentContainerStyle={styles.content}>
-                {/* Header */}
-                <View style={styles.header}>
-                    <Text style={styles.headerTitle}>Settings</Text>
-                </View>
+
 
                 {/* Data Management Section */}
                 <View style={styles.section}>
