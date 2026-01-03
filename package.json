@@ -6,7 +6,13 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "clean": "rm -rf node_modules/.cache .expo && echo '✅ Caches cleared'",
+    "clean:all": "rm -rf node_modules package-lock.json .expo node_modules/.cache && echo '✅ All build artifacts removed. Run npm install next.'",
+    "health-check": "node scripts/health-check.js",
+    "typecheck": "tsc --noEmit",
+    "lint": "npx expo lint",
+    "reset": "npm run clean:all && npm install && echo '✅ Project reset complete. Run npm start to begin.'"
   },
   "dependencies": {
     "@expo-google-fonts/playfair-display": "^0.4.2",
