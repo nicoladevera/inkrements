@@ -124,6 +124,9 @@ inkrements/
 │       ├── greetingUtils.ts          # Time-based greeting logic
 │       └── statisticsUtils.ts        # Completion rate calculations
 │
+├── scripts/                          # Maintenance and automation scripts
+│   └── health-check.js               # Proactive environment health checker
+│
 ├── tasks/                            # Project planning documents
 │   ├── prd-inkrements-habit-tracker.md
 │   └── tasks-inkrements-habit-tracker.md
@@ -203,6 +206,41 @@ npx expo start --tunnel
 npx expo start --lan
 ```
 
+### Maintenance & Health Checks
+
+**⚠️ PROACTIVE ISSUE DETECTION** - Run these before starting work or when experiencing issues:
+
+```bash
+# Health check - Detects common issues automatically
+npm run health-check
+# Checks for:
+# - Corrupted node_modules (duplicate folders like "expo 2", "metro 3")
+# - Port conflicts on 8081
+# - Stale caches (>7 days old)
+# - TypeScript errors
+# - Expo compatibility issues
+
+# Clear Metro and Expo caches (quick fix)
+npm run clean
+# Removes: node_modules/.cache, .expo/
+
+# Nuclear option - Remove all build artifacts
+npm run clean:all
+# Removes: node_modules, package-lock.json, .expo, caches
+# REQUIRES: npm install after running
+
+# Complete reset (clean + reinstall)
+npm run reset
+# Runs clean:all + npm install automatically
+# Use when: Corrupted node_modules, failed npm install, persistent Metro issues
+```
+
+**When to Use Each Command**:
+- `npm run health-check`: **Daily routine** before starting work, or when debugging
+- `npm run clean`: Metro behaving strangely, but node_modules seems fine
+- `npm run reset`: Corrupted node_modules detected, or after interrupted npm install
+- `npx expo start --clear`: First run after branch switch or dependency update
+
 ### Building & Deployment
 
 ```bash
@@ -237,11 +275,18 @@ eas build --platform ios --profile production --clear-cache
 
 ```bash
 # Type check (no emit)
-npx tsc --noEmit
+npm run typecheck
+# or: npx tsc --noEmit
 
 # Watch mode for type checking
 npx tsc --noEmit --watch
 ```
+
+**Recommended Workflow**:
+1. Run `npm run health-check` (includes TypeScript check)
+2. Fix errors shown in output
+3. For detailed errors: `npm run typecheck`
+4. For continuous checking: `npx tsc --noEmit --watch`
 
 ### Testing
 
@@ -408,13 +453,40 @@ npx expo run:android  # Android
 
 ### Debugging Common Issues
 
-See `docs/MOBILE_TESTING.md` for comprehensive troubleshooting, including:
-- Worklets version mismatch errors
-- Connection issues (Expo Go)
-- Simulator won't open
-- App crashes on launch
-- Hot reload not working
-- Package compatibility errors
+**Primary Resources**:
+1. **`docs/TROUBLESHOOTING.md`** - ⚠️ **START HERE** for Metro/connection issues:
+   - Metro bundler connection errors (WebSocket 1006)
+   - "Could not connect to development server" errors
+   - Corrupted node_modules (duplicate folders)
+   - Expo start timeout errors
+   - Simulator connection issues
+
+2. **`docs/MOBILE_TESTING.md`** - Platform-specific troubleshooting:
+   - Worklets version mismatch errors
+   - Connection issues (Expo Go)
+   - Simulator won't open
+   - App crashes on launch
+   - Hot reload not working
+   - Package compatibility errors
+
+**Quick Diagnostic Steps**:
+```bash
+# 1. Check for corrupted node_modules
+ls node_modules | grep -E " 2$| 3$"
+# If duplicates found → npm run reset
+
+# 2. Run health check
+npm run health-check
+# Follow recommendations in output
+
+# 3. Check Metro logs for errors
+npx expo start --clear
+# Look for red error text or Babel errors
+
+# 4. Test bundle generation
+curl --max-time 30 "http://localhost:8081/status"
+# Should return: packager-status:running
+```
 
 ---
 
@@ -1013,19 +1085,22 @@ eas build --platform ios --profile production
 5. Never commit secrets/credentials
 
 **Before Making Changes**:
-1. Read relevant files (screens, components, services)
-2. Check TypeScript types in `src/models/`
-3. Follow existing patterns (service layer, React hooks)
-4. Test on iOS Simulator + Android Emulator
-5. Run `npx tsc --noEmit` to verify types
+1. **Run health check**: `npm run health-check` (catches corrupted node_modules, TypeScript errors)
+2. Read relevant files (screens, components, services)
+3. Check TypeScript types in `src/models/`
+4. Follow existing patterns (service layer, React hooks)
+5. Test on iOS Simulator + Android Emulator
+6. Run `npx tsc --noEmit` to verify types
 
 **Common Tasks**:
 - Add feature → Create service method → Update screen → Add types
 - Change UI → Import from constants → Update StyleSheet
 - Fix bug → Check service layer → Add error handling
 - Update dependency → Use `npx expo install <package>` → Test compatibility
+- Debug Metro issues → `npm run health-check` → Check `docs/TROUBLESHOOTING.md`
 
 **Documentation**:
+- **Troubleshooting**: `docs/TROUBLESHOOTING.md` ⚠️ Start here for Metro/connection issues
 - Mobile testing: `docs/MOBILE_TESTING.md`
 - Deployment: `docs/DEPLOYMENT.md`
 - Design plan: `docs/REDESIGN_PLAN.md`

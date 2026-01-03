@@ -80,12 +80,18 @@ A personal habit-tracking application inspired by GitHub's tile-based contributi
    npm install
    ```
 
-3. **Start the development server**
+3. **Run health check** (optional but recommended)
+   ```bash
+   npm run health-check
+   ```
+   This proactively checks for common issues like corrupted node_modules, port conflicts, and TypeScript errors.
+
+4. **Start the development server**
    ```bash
    npx expo start
    ```
 
-4. **Run on your device**
+5. **Run on your device**
    - **iOS**: Press `i` in the terminal or scan QR code with Expo Go
    - **Android**: Press `a` in the terminal or scan QR code with Expo Go
    - **Web**: Press `w` in the terminal or visit `http://localhost:8081`
@@ -107,6 +113,35 @@ eas build --platform android
 ```
 
 For detailed deployment instructions, see the [Deployment Guide](docs/DEPLOYMENT.md).
+
+## 🛠️ Useful Commands
+
+### Development Scripts
+
+```bash
+# Start the app
+npm start              # Start Expo dev server
+npm run ios            # Start and open in iOS simulator
+npm run android        # Start and open in Android emulator
+npm run web            # Start and open in browser
+
+# Maintenance
+npm run health-check   # Check for common issues (corrupted node_modules, port conflicts, etc.)
+npm run clean          # Clear Metro and Expo caches
+npm run clean:all      # Remove all build artifacts (requires npm install after)
+npm run reset          # Nuclear option: clean everything and reinstall
+
+# Code Quality
+npm run typecheck      # Run TypeScript compiler without emitting files
+npm run lint           # Run ESLint (if configured)
+```
+
+### When to Use Each Command
+
+- **`npm run health-check`**: Run this before starting work or when experiencing issues
+- **`npm run clean`**: Use when Metro is behaving strangely but node_modules seems fine
+- **`npm run reset`**: Use when you suspect corrupted node_modules or after failed npm installs
+- **`npm run typecheck`**: Run before committing to catch type errors early
 
 ## 🏗️ Project Structure
 
@@ -220,6 +255,7 @@ This is currently a personal project, but suggestions and feedback are welcome! 
 
 ## 📝 Documentation
 
+- [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - **⚠️ Start here if you have issues!** Covers Metro connection errors, corrupted node_modules, and more
 - [Mobile Testing Guide](docs/MOBILE_TESTING.md) - Testing on devices, simulators, and troubleshooting
 - [Deployment Guide](docs/DEPLOYMENT.md) - EAS Build configuration and deployment instructions
 - [Redesign Plan](docs/REDESIGN_PLAN.md) - Complete visual redesign implementation guide
@@ -227,6 +263,35 @@ This is currently a personal project, but suggestions and feedback are welcome! 
 - [Task List](tasks/tasks-inkrements-habit-tracker.md)
 
 ## 🔧 Troubleshooting
+
+**⚠️ Having issues? See the [Complete Troubleshooting Guide](docs/TROUBLESHOOTING.md) for detailed solutions.**
+
+Common issues covered:
+- **Metro bundler connection errors** (WebSocket 1006, "Could not connect to development server")
+- **Corrupted node_modules** (duplicate folders causing Metro to hang)
+- **Expo start timeout errors**
+- **Simulator connection issues**
+
+### Quick Fixes
+
+**App won't load / "Could not connect to development server":**
+```bash
+# Check for corrupted node_modules
+ls node_modules | grep -E " 2$| 3$"
+
+# If you see duplicates, clean reinstall:
+rm -rf node_modules package-lock.json
+npm install
+npx expo start --clear --ios
+```
+
+**Metro bundler issues:**
+```bash
+# Nuclear option - clear everything
+npm run clean
+npm install
+npx expo start --clear
+```
 
 ### Package compatibility issues
 See the [Mobile Testing Guide](docs/MOBILE_TESTING.md#worklets-version-mismatch-error) for detailed troubleshooting steps, especially for:

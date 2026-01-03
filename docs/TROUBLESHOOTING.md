@@ -1,6 +1,6 @@
 # Troubleshooting Guide
 
-## Metro Running But Simulator Can't Connect
+## Metro Running But Simulator Can't Connect (WebSocket Error 1006)
 
 ### Symptoms
 
@@ -17,14 +17,23 @@ Ensure the following:
 URL: http://192.168.1.155:8081/index.ts.bundle?platform=ios...
 ```
 
-Metro bundler is running (confirmed with `lsof -i :8081`), but the simulator can't establish a connection.
+**Key indicators:**
+- Metro bundler is running (confirmed with `lsof -i :8081`)
+- Metro shows: `Connection established... Connection closed with code='1006'`
+- No errors in Metro logs, but app never loads
+- Happens on **both simulator and physical device**
+- Happens on **both local network and tunnel mode**
 
 ### Root Cause
 
-This is typically caused by:
+**Primary cause:** Corrupted `node_modules` directory with duplicate folders (e.g., `expo 2`, `metro 3`, `metro-config 2`). This happens when npm install fails or gets interrupted, leaving the node_modules in an inconsistent state.
+
+When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot properly resolve modules and hangs when trying to build the bundle.
+
+**Secondary causes:**
 - **Stale Metro bundler cache** - Old cached state preventing proper bundle serving
 - **Simulator network stack issues** - Simulator's network layer needs reset
-- **Stale app bundle in simulator** - Old app instance with wrong Metro URL
+- **VPN/proxy interference** - Though less likely if tunnel mode also fails
 
 ### Diagnosis Steps
 
@@ -40,26 +49,49 @@ This is typically caused by:
    # Should return: packager-status:running
    ```
 
-   - If Metro is **not running**: See "Expo Start Timeout" section below
-   - If Metro **is running and accessible**: Continue with solution below
+3. **Check for corrupted node_modules:**
+   ```bash
+   ls node_modules | grep -E " 2$| 3$"
+   # If you see duplicate folders like "expo 2" or "metro 3", node_modules is corrupted
+   ```
+
+4. **Test if Metro can build the bundle:**
+   ```bash
+   curl --max-time 30 "http://localhost:8081/index.bundle?platform=ios&dev=true" -o /dev/null -w "HTTP %{http_code}\n"
+   # Should return: HTTP 200 within a few seconds
+   # If it times out or returns HTTP 000, Metro cannot build the bundle
+   ```
+
+   - If Metro **is not running**: See "Expo Start Timeout" section below
+   - If Metro **is running but cannot build bundle**: Continue with solution below
 
 ### Solution
 
-1. **Kill existing Metro process and clear caches:**
-   ```bash
-   # Find and kill Metro/Expo processes
-   ps aux | grep -E "node.*expo" | grep -v grep
-   kill <PID>
+**CRITICAL: If you have duplicate folders in node_modules, start here:**
 
-   # Clear Metro caches
-   rm -rf node_modules/.cache
+1. **Clean reinstall node_modules (MOST COMMON FIX):**
+   ```bash
+   rm -rf node_modules package-lock.json
+   npm install
+   npx expo start --clear --ios
+   ```
+
+   This fixes corrupted node_modules that cause Metro to hang when bundling.
+
+2. **If clean install doesn't work, clear all caches:**
+   ```bash
+   # Kill existing Metro/Expo processes
+   lsof -ti :8081 | xargs kill 2>/dev/null
+
+   # Clear all caches
+   rm -rf node_modules/.cache .expo
    rm -rf /tmp/metro-* /tmp/react-* /tmp/haste-* 2>/dev/null || true
 
    # Restart with clean slate
    npx expo start --clear --ios
    ```
 
-2. **If still failing, reset the simulator:**
+3. **If still failing, reset the simulator:**
    ```bash
    # Completely quit Simulator app (not just close window)
    osascript -e 'quit app "Simulator"'
@@ -88,9 +120,21 @@ This is typically caused by:
 
 ### Prevention
 
+- **Don't interrupt npm install** - Let it complete fully. If it hangs, kill it and run `npm cache clean --force` before retrying
+- Check for duplicate folders periodically: `ls node_modules | grep -E " 2$| 3$"`
+- If npm install fails or gets interrupted, do a clean reinstall: `rm -rf node_modules package-lock.json && npm install`
 - Always use `--clear` flag when you haven't run the app in a while: `npx expo start --clear`
 - If you switch WiFi networks, restart Metro bundler
 - Periodically clear Metro caches: `rm -rf node_modules/.cache`
+
+### How Corrupted node_modules Happens
+
+When npm install is interrupted (Ctrl+C, crash, network failure), npm may leave behind:
+- Partially downloaded packages
+- Duplicate folders named with incrementing numbers (`package 2`, `package 3`)
+- Broken symlinks or missing dependencies
+
+This causes Metro's module resolver to fail silently, hanging indefinitely when trying to build bundles.
 
 ---
 
