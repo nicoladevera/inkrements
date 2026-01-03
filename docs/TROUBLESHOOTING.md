@@ -1,5 +1,99 @@
 # Troubleshooting Guide
 
+## Metro Running But Simulator Can't Connect
+
+### Symptoms
+
+The app loads in the simulator but shows a red error screen:
+
+```
+Could not connect to development server.
+
+Ensure the following:
+- Node server is running and available on the same network - run 'npm start' from react-native root
+- Node server URL is correctly set in AppDelegate
+- WiFi is enabled and connected to the same network as the Node Server
+
+URL: http://192.168.1.155:8081/index.ts.bundle?platform=ios...
+```
+
+Metro bundler is running (confirmed with `lsof -i :8081`), but the simulator can't establish a connection.
+
+### Root Cause
+
+This is typically caused by:
+- **Stale Metro bundler cache** - Old cached state preventing proper bundle serving
+- **Simulator network stack issues** - Simulator's network layer needs reset
+- **Stale app bundle in simulator** - Old app instance with wrong Metro URL
+
+### Diagnosis Steps
+
+1. **Verify Metro is actually running:**
+   ```bash
+   lsof -i :8081
+   # Should show: node <PID> ... *:sunproxyadmin (LISTEN)
+   ```
+
+2. **Test Metro accessibility:**
+   ```bash
+   curl http://192.168.1.155:8081/status
+   # Should return: packager-status:running
+   ```
+
+   - If Metro is **not running**: See "Expo Start Timeout" section below
+   - If Metro **is running and accessible**: Continue with solution below
+
+### Solution
+
+1. **Kill existing Metro process and clear caches:**
+   ```bash
+   # Find and kill Metro/Expo processes
+   ps aux | grep -E "node.*expo" | grep -v grep
+   kill <PID>
+
+   # Clear Metro caches
+   rm -rf node_modules/.cache
+   rm -rf /tmp/metro-* /tmp/react-* /tmp/haste-* 2>/dev/null || true
+
+   # Restart with clean slate
+   npx expo start --clear --ios
+   ```
+
+2. **If still failing, reset the simulator:**
+   ```bash
+   # Completely quit Simulator app (not just close window)
+   osascript -e 'quit app "Simulator"'
+
+   # Wait 2-3 seconds, then restart
+   npx expo start --clear --ios
+   ```
+
+3. **If still failing, erase simulator:**
+   ```bash
+   # List devices to get ID
+   xcrun simctl list devices | grep "iPhone"
+
+   # Erase the simulator (replace with your device ID)
+   xcrun simctl erase <DEVICE_ID>
+
+   # Restart
+   npx expo start --clear --ios
+   ```
+
+4. **Last resort - use tunnel mode:**
+   ```bash
+   npx expo start --tunnel
+   ```
+   This bypasses local network issues by routing through Expo's servers.
+
+### Prevention
+
+- Always use `--clear` flag when you haven't run the app in a while: `npx expo start --clear`
+- If you switch WiFi networks, restart Metro bundler
+- Periodically clear Metro caches: `rm -rf node_modules/.cache`
+
+---
+
 ## Expo Start Timeout / Simulator URL Opening Fails
 
 ### Symptoms
