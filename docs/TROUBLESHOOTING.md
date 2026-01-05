@@ -26,7 +26,13 @@ URL: http://192.168.1.155:8081/index.ts.bundle?platform=ios...
 
 ### Root Cause
 
-**Primary cause:** Corrupted `node_modules` directory with duplicate folders (e.g., `expo 2`, `metro 3`, `metro-config 2`). This happens when npm install fails or gets interrupted, leaving the node_modules in an inconsistent state.
+**Primary cause:** Corrupted `node_modules` directory with duplicate folders (e.g., `expo 2`, `metro 3`, `metro-config 2`).
+
+**How duplicates happen:**
+
+1. **iCloud Drive sync conflicts** (most common) - When the project is in an iCloud-synced folder (like `~/Documents/`), npm/Expo rapidly creates thousands of files. iCloud's sync engine detects "conflicts" between local and cloud versions and creates backup copies with ` 2`, ` 3` suffixes, corrupting the dependency tree.
+
+2. **Interrupted npm install** - When npm install fails or gets interrupted (Ctrl+C, crash, network failure), npm may leave behind partial installations with duplicate numbered folders.
 
 When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot properly resolve modules and hangs when trying to build the bundle.
 
@@ -69,16 +75,32 @@ When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot pro
 
 **CRITICAL: If you have duplicate folders in node_modules, start here:**
 
-1. **Clean reinstall node_modules (MOST COMMON FIX):**
+1. **Quick reset using built-in script (RECOMMENDED):**
    ```bash
-   rm -rf node_modules package-lock.json
+   npm run reset
+   ```
+
+   This automatically runs a comprehensive cleanup (removes `node_modules`, `package-lock.json`, `.expo`, and all caches), then reinstalls dependencies.
+
+2. **Or, manual cleanup:**
+   ```bash
+   rm -rf node_modules package-lock.json .expo
    npm install
    npx expo start --clear --ios
    ```
 
    This fixes corrupted node_modules that cause Metro to hang when bundling.
 
-2. **If clean install doesn't work, clear all caches:**
+3. **For large corrupted node_modules (if deletion takes 10+ minutes):**
+   ```bash
+   # Delete files first (faster), then empty directories
+   find node_modules -type f -delete 2>/dev/null
+   find node_modules -type d -empty -delete 2>/dev/null
+   rm -rf node_modules
+   npm install
+   ```
+
+4. **If clean install doesn't work, clear all caches:**
    ```bash
    # Kill existing Metro/Expo processes
    lsof -ti :8081 | xargs kill 2>/dev/null
@@ -91,7 +113,7 @@ When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot pro
    npx expo start --clear --ios
    ```
 
-3. **If still failing, reset the simulator:**
+5. **If still failing, reset the simulator:**
    ```bash
    # Completely quit Simulator app (not just close window)
    osascript -e 'quit app "Simulator"'
@@ -100,7 +122,7 @@ When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot pro
    npx expo start --clear --ios
    ```
 
-3. **If still failing, erase simulator:**
+6. **If still failing, erase simulator:**
    ```bash
    # List devices to get ID
    xcrun simctl list devices | grep "iPhone"
@@ -112,7 +134,7 @@ When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot pro
    npx expo start --clear --ios
    ```
 
-4. **Last resort - use tunnel mode:**
+7. **Last resort - use tunnel mode:**
    ```bash
    npx expo start --tunnel
    ```
@@ -120,21 +142,28 @@ When you run `ls node_modules | grep " 2$"` and see duplicates, Metro cannot pro
 
 ### Prevention
 
+- **CRITICAL: Keep projects outside iCloud-synced folders** - Development projects should be in `~/Developer/` or similar non-synced locations, NOT in `~/Documents/`, `~/Desktop/`, or other iCloud Drive folders. Use Git/GitHub for backup instead of iCloud.
+- **Run periodic health checks** - Use `npm run health-check` to detect duplicate folders and other issues early
 - **Don't interrupt npm install** - Let it complete fully. If it hangs, kill it and run `npm cache clean --force` before retrying
-- Check for duplicate folders periodically: `ls node_modules | grep -E " 2$| 3$"`
-- If npm install fails or gets interrupted, do a clean reinstall: `rm -rf node_modules package-lock.json && npm install`
-- Always use `--clear` flag when you haven't run the app in a while: `npx expo start --clear`
+- **Clean reinstall on failures** - If npm install fails or gets interrupted, do a clean reinstall: `npm run reset` or `rm -rf node_modules package-lock.json && npm install`
+- **Clear caches regularly** - Use `--clear` flag when you haven't run the app in a while: `npx expo start --clear`
 - If you switch WiFi networks, restart Metro bundler
-- Periodically clear Metro caches: `rm -rf node_modules/.cache`
 
 ### How Corrupted node_modules Happens
 
+**iCloud Drive conflicts (most common):**
+When the project is in an iCloud-synced folder, npm/Expo rapidly creates thousands of files during installation. iCloud's sync engine may:
+1. Detect "conflicts" between local and cloud versions
+2. Create backup copies with ` 2`, ` 3` suffixes
+3. Corrupt the node_modules structure, breaking Metro's module resolution
+
+**Interrupted installations:**
 When npm install is interrupted (Ctrl+C, crash, network failure), npm may leave behind:
 - Partially downloaded packages
-- Duplicate folders named with incrementing numbers (`package 2`, `package 3`)
+- Duplicate folders named with incrementing numbers
 - Broken symlinks or missing dependencies
 
-This causes Metro's module resolver to fail silently, hanging indefinitely when trying to build bundles.
+Both scenarios cause Metro's module resolver to fail silently, hanging indefinitely when trying to build bundles.
 
 ---
 
