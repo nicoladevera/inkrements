@@ -1,6 +1,6 @@
 # Inkrements
 
-A personal habit-tracking application inspired by GitHub's tile-based contribution graph. **Inkrements** combines "increments" (gradual progress) and "ink" (the act of jotting things down) to help you visualize and maintain consistency in your daily habits.
+A personal habit-tracking application inspired by GitHub's tile-based contribution graph. **Inkrements** combines "ink" (the act of jotting things down) and "increments" (gradual progress) to help you visualize and maintain consistency in your daily habits.
 
 ![Modern Wellness Design](https://img.shields.io/badge/version-2.0-peach?style=flat-square)
 ![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-lightgray?style=flat-square)
