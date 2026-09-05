@@ -218,7 +218,7 @@ export const updateHabit = async (
   
   // Build update fields
   const updates: string[] = ['updated_at = ?'];
-  const values: (string | number)[] = [now];
+  const values: (string | number | null)[] = [now];
   
   if (input.name !== undefined) {
     updates.push('name = ?');
